@@ -34,31 +34,33 @@ namespace Baza
 
         private void StartConnection()
         {
-            // String connectionString = "Data Source=(localdb)\v11.0;Initial Catalog=Student; Integrated Security=true";   
-            // connection.Open();     // because default state is Close();
-  
             try
             {
                 connection = new SqlConnection();
-                connection.ConnectionString = ConfigurationManager.ConnectionStrings["connstudent"].ConnectionString;
+                connection.ConnectionString = ConfigurationManager.ConnectionStrings["wypozyczalnia"].ConnectionString;
                 connection.Open();
 
                 Start.IsEnabled = true;
                 MessageBox.Show("Connected to db");
+
+
+                inquiry =  "Select * from klienci";    
+                DataShow(inquiry, klienciGrid);
+
+                inquiry = "Select * from pracownicy";
+                DataShow(inquiry, pracownicyGrid);
+
+                inquiry = "Select * from samochody";
+                DataShow(inquiry, samochodyGrid);
+
+                inquiry = "select klienci.imie, klienci.nazwisko, samochody.marka, wypozyczenia.wypID from klienci, samochody, wypozyczenia where wypozyczenia.klientID = 2 and wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
+                DataShow(inquiry, zamowieniaGrid);
 
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Connection Failure", ex.Message);
             }
-
-            /*   var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-               var connectionStringsSection = (ConnectionStringsSection)config.GetSection("connectionStrings");
-               connectionStringsSection.ConnectionStrings["Blah"].ConnectionString = "Data Source=(localdb)\v11.0;Initial Catalog=Student; Integrated Security=true";
-               config.Save();
-               ConfigurationManager.RefreshSection("connectionStrings");
-
-           */
         }
 
         private void Start_Click(object sender, RoutedEventArgs e)
@@ -75,12 +77,10 @@ namespace Baza
                 command.ExecuteScalar();
 
                 SqlDataAdapter da = new SqlDataAdapter(command);
-                DataTable dt = new DataTable("Students");
+                DataTable dt = new DataTable("Car Rent");
                 da.Fill(dt);
 
                 g1.ItemsSource = dt.DefaultView;
-
-               // MessageBox.Show("Inquiry ok.");
             }
             catch(Exception ex)
             {
@@ -96,6 +96,36 @@ namespace Baza
         private void Connect_Click(object sender, RoutedEventArgs e)
         {
             StartConnection();
+        }
+
+        private void g1_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        // funkcja pomocnicza
+
+        private void DataShow(string inquiry, DataGrid dataGrid)
+        {
+            try
+            {
+                SqlCommand command = new SqlCommand();
+
+                command.CommandText = inquiry;
+                command.Connection = connection;
+
+                command.ExecuteScalar();
+
+                SqlDataAdapter da = new SqlDataAdapter(command);
+                DataTable dt = new DataTable("Car Rent");
+                da.Fill(dt);
+                
+                dataGrid.ItemsSource = dt.DefaultView;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Inquiry Failure", ex.Message);
+            }
         }
     }
 }

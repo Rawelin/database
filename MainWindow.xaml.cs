@@ -41,9 +41,10 @@ namespace Baza
                 connection.Open();
 
                 Start.IsEnabled = true;
-                MessageBox.Show("Connected to db");
-
-
+                // MessageBox.Show("Connected to db", "Successful");
+                Login login = new Login();
+                login.Show();
+               
                 inquiry =  "Select * from klienci";    
                 DataShow(inquiry, klienciGrid);
 
@@ -114,7 +115,7 @@ namespace Baza
                 command.CommandText = inquiry;
                 command.Connection = connection;
 
-                command.ExecuteScalar();
+               // command.ExecuteScalar();
 
                 SqlDataAdapter da = new SqlDataAdapter(command);
                 DataTable dt = new DataTable("Car Rent");
@@ -126,6 +127,20 @@ namespace Baza
             {
                 MessageBox.Show("Inquiry Failure", ex.Message);
             }
+        }
+
+        private void addClient_click(object sender, RoutedEventArgs e)
+        {
+            //  insert into pracownicy(imie, nazwisko) values('Marian', 'Koniuszko');
+
+            string name = nameTextBox.Text;
+            string surname =surnameTextBox.Text;
+            string pesel = peselTextBox.Text;
+
+            inquiry = "insert into klienci values('"+name+"', '"+surname+"', '"+pesel+"')";
+
+            DataShow(inquiry, klienciGrid);
+            StartConnection();
         }
     }
 }

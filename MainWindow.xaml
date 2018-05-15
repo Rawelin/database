@@ -31,15 +31,32 @@
               
                 <TabItem Header="Klienci">
                     <StackPanel>
-                        <Grid Margin="10" Height="250">
+                        <Grid Margin="10" Height="350">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="450"/>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="233*"/>
                                 <RowDefinition Height="33*"/>
                                 <RowDefinition Height="4*"/>
                             </Grid.RowDefinitions>
 
-                            <DataGrid Name="klienciGrid" AutoGenerateColumns="True" Margin="0,0,0,-41" Grid.RowSpan="3" SelectionChanged="g1_SelectionChanged" />
+                            <DataGrid Grid.Column="0" Name="klienciGrid" AutoGenerateColumns="True" SelectionChanged="g1_SelectionChanged" />
+                           
+                            <StackPanel Grid.Column="1" Orientation="Vertical">
+                                <TextBlock>Imię:</TextBlock>
+                                <TextBox x:Name="nameTextBox"/>
+                                <TextBlock>Nazwisko:</TextBlock>
+                                <TextBox x:Name="surnameTextBox"/>
+                                <TextBlock>Pesel:</TextBlock>
+                                <TextBox x:Name="peselTextBox"/>
+                                <Button Click="addClient_click">Zapisz</Button>
 
+
+                            </StackPanel>
                         </Grid>
                     </StackPanel>
                 </TabItem>
@@ -92,7 +109,7 @@
 
                   
 
-                <TabItem Header="Zapytania">
+                <TabItem Header="Raporty">
 
                     <StackPanel>
                         <Grid Margin="10">
@@ -121,7 +138,6 @@
                     </StackPanel>
 
                 </TabItem>
-
 
             </TabControl>
         </Grid>

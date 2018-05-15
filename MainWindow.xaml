@@ -44,17 +44,17 @@
                                 <RowDefinition Height="4*"/>
                             </Grid.RowDefinitions>
 
-                            <DataGrid Grid.Column="0" Name="klienciGrid" AutoGenerateColumns="True" SelectionChanged="g1_SelectionChanged" />
+                            <DataGrid Grid.Column="0" Name="klienciGrid" AutoGenerateColumns="True" SelectionChanged="klienci_SelectionChanged" />
                            
                             <StackPanel Grid.Column="1" Orientation="Vertical">
                                 <TextBlock>Imię:</TextBlock>
-                                <TextBox x:Name="nameTextBox"/>
+                                <TextBox x:Name="nameTextBox" Text="{Binding Path=CurrentItem}"/>
                                 <TextBlock>Nazwisko:</TextBlock>
                                 <TextBox x:Name="surnameTextBox"/>
                                 <TextBlock>Pesel:</TextBlock>
                                 <TextBox x:Name="peselTextBox"/>
                                 <Button Click="addClient_click">Zapisz</Button>
-
+                                <Button Click="deleteClient_Click">Kasuj</Button>
 
                             </StackPanel>
                         </Grid>

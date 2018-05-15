@@ -23,6 +23,7 @@ namespace Baza
     public partial class MainWindow : Window
     {
         private String inquiry;
+        private String id;
         private SqlConnection connection;
 
         public MainWindow()
@@ -104,9 +105,9 @@ namespace Baza
 
         }
 
-        // funkcja pomocnicza
+       
 
-        private void DataShow(string inquiry, DataGrid dataGrid)
+        private void DataShow(string inquiry, DataGrid dataGrid)     // funkcja pomocnicza - przyjmuje 2 parametry (zapytanie, siatka do wyświetlania danych)
         {
             try
             {
@@ -131,16 +132,38 @@ namespace Baza
 
         private void addClient_click(object sender, RoutedEventArgs e)
         {
-            //  insert into pracownicy(imie, nazwisko) values('Marian', 'Koniuszko');
-
             string name = nameTextBox.Text;
             string surname =surnameTextBox.Text;
             string pesel = peselTextBox.Text;
 
-            inquiry = "insert into klienci values('"+name+"', '"+surname+"', '"+pesel+"')";
+            inquiry = "insert into klienci values('"+name+"', '"+surname+"', '"+pesel+"')";  
 
+            DataShow(inquiry, klienciGrid);                                // dodanie rekordu
+
+            inquiry = "Select * from klienci";                             // Odświeżenie widoku po dodaniu rekordu
             DataShow(inquiry, klienciGrid);
-            StartConnection();
+
+
+        }
+
+        private void klienci_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DataRowView row = klienciGrid.SelectedItem as DataRowView;
+            
+            id = row.Row.ItemArray[0].ToString();
+            nameTextBox.Text = row.Row.ItemArray[1].ToString(); 
+            surnameTextBox.Text = row.Row.ItemArray[2].ToString(); 
+            peselTextBox.Text = row.Row.ItemArray[3].ToString();
+        }
+
+        private void deleteClient_Click(object sender, RoutedEventArgs e)
+        {
+            inquiry = "delete from klienci where klientID="+id+"";
+
+            DataShow(inquiry, klienciGrid);                                // skasownie rekordu
+
+            inquiry = "Select * from klienci";                             // Odświeżenie widoku po dodaniu rekordu
+            DataShow(inquiry, klienciGrid);
         }
     }
 }

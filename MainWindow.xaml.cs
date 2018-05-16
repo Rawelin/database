@@ -15,7 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Configuration;                       // for ConfigurationManger - add references in solution explorer
 using System.Data;                                // for DataTable
-                                                  
+using System.Text.RegularExpressions;
 
 namespace Baza
 {
@@ -25,6 +25,7 @@ namespace Baza
         private String inquiry;
         private String id;
         private SqlConnection connection;
+        private DataRowView row;
 
         public MainWindow()
         {
@@ -55,7 +56,8 @@ namespace Baza
                 inquiry = "Select * from samochody";
                 DataShow(inquiry, samochodyGrid);
 
-                inquiry = "select klienci.imie, klienci.nazwisko, samochody.marka, wypozyczenia.wypID from klienci, samochody, wypozyczenia where wypozyczenia.klientID = 2 and wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
+                // inquiry = "select klienci.imie, klienci.nazwisko, samochody.marka, wypozyczenia.wypID from klienci, samochody, wypozyczenia where wypozyczenia.klientID = 2 and wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
+                inquiry = "select klienci.imie, klienci.nazwisko, samochody.marka, wypozyczenia.wypID from klienci, samochody, wypozyczenia where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
                 DataShow(inquiry, wypozyczeniGrid);
 
             }
@@ -112,7 +114,7 @@ namespace Baza
             }
         }
 
-        private void addClient_click(object sender, RoutedEventArgs e)
+        private void add_Click(object sender, RoutedEventArgs e)
         {
             string name = nameTextBox.Text;
             string surname =surnameTextBox.Text;
@@ -126,25 +128,84 @@ namespace Baza
             DataShow(inquiry, klienciGrid);
         }
 
-        private void klienci_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void edit_Click(object sender, RoutedEventArgs e)
         {
-            DataRowView row = klienciGrid.SelectedItem as DataRowView;
+            if (sender == editClient)
+            {
+                string name = nameTextBox.Text;
+                string surname = surnameTextBox.Text;
+                string pesel = peselTextBox.Text;
+
+                // update klienci set imie='Janina' where klientID=34
+
+
+                inquiry = "update klienci set imie='" + name + "' where klientID=" + id + "";
+                DataShow(inquiry, klienciGrid);
+
+                inquiry = "update klienci set nazwisko='" + surname + "' where klientID=" + id + "";
+                DataShow(inquiry, klienciGrid);
+
+                inquiry = "update klienci set pesel='" + pesel + "' where klientID=" + id + "";
+                DataShow(inquiry, klienciGrid);
+
+                inquiry = "Select * from klienci";                             // Odświeżenie widoku po dodaniu rekordu
+                DataShow(inquiry, klienciGrid);
+            }
+        }
+
+        private void delete_Click(object sender, RoutedEventArgs e)
+        {
+
+            if (sender == deleteClient)
+            {
+                inquiry = "delete from klienci where klientID=" + id + "";
+
+                DataShow(inquiry, klienciGrid);                                // skasownie rekordu
+
+                inquiry = "Select * from klienci";                             // Odświeżenie widoku po dodaniu rekordu
+                DataShow(inquiry, klienciGrid);
+            }
+            else if (sender == deleteEmployee)
+            {
+                inquiry = "delete from pracownicy where pracID=" + id + "";
+
+                DataShow(inquiry, pracownicyGrid);                                // skasownie rekordu
+
+                inquiry = "Select * from pracownicy";                             // Odświeżenie widoku po dodaniu rekordu
+                DataShow(inquiry, pracownicyGrid);
+            }
+
+        }
+
+        private void grid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+           
+            if (sender == klienciGrid)
+            {
+                row = klienciGrid.SelectedItem as DataRowView;
+               
+                id = row.Row.ItemArray[0].ToString();
+                nameTextBox.Text = row.Row.ItemArray[1].ToString();
+                surnameTextBox.Text = row.Row.ItemArray[2].ToString();
+                peselTextBox.Text = row.Row.ItemArray[3].ToString();
+            }
+            else if (sender == pracownicyGrid)
+            {
+                row = pracownicyGrid.SelectedItem as DataRowView;
+
+                id = row.Row.ItemArray[0].ToString();
+                nameTextBoxP.Text = row.Row.ItemArray[1].ToString();
+                surnameTextBoxP.Text = row.Row.ItemArray[2].ToString();
+            }
+
             
-            id = row.Row.ItemArray[0].ToString();
-            nameTextBox.Text = row.Row.ItemArray[1].ToString(); 
-            surnameTextBox.Text = row.Row.ItemArray[2].ToString(); 
-            peselTextBox.Text = row.Row.ItemArray[3].ToString();
+            
+            
+
+          
         }
 
-        private void deleteClient_Click(object sender, RoutedEventArgs e)
-        {
-            inquiry = "delete from klienci where klientID="+id+"";
-
-            DataShow(inquiry, klienciGrid);                                // skasownie rekordu
-
-            inquiry = "Select * from klienci";                             // Odświeżenie widoku po dodaniu rekordu
-            DataShow(inquiry, klienciGrid);
-        }
+       
 
         private void topClient_Click(object sender, RoutedEventArgs e)
         {
@@ -167,7 +228,7 @@ namespace Baza
 
             // insert into  wypozyczenia values(1, 1, 1, '2018-3-25', '2018-3-28', 1200)
 
-            inquiry = "insert into wypozyczenia values('"+samID+"', '"+pracID+"', '"+klientID+"', '"+datawyp+"', '"+datazwr+"', '"+koszt+"')";
+            inquiry = "insert into wypozyczenia values("+samID+", "+pracID+", "+klientID+", "+datawyp+", "+datazwr+", "+koszt+")";
 
             DataShow(inquiry, wypozyczeniGrid);
         }
@@ -175,6 +236,12 @@ namespace Baza
         private void deleteWypozyczenie(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)    // zapobiega wprowadzaniu liter 
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
         }
     }
 }

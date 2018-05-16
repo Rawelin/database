@@ -56,7 +56,7 @@ namespace Baza
                 DataShow(inquiry, samochodyGrid);
 
                 inquiry = "select klienci.imie, klienci.nazwisko, samochody.marka, wypozyczenia.wypID from klienci, samochody, wypozyczenia where wypozyczenia.klientID = 2 and wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
-                DataShow(inquiry, zamowieniaGrid);
+                DataShow(inquiry, wypozyczeniGrid);
 
             }
             catch (Exception ex)
@@ -68,26 +68,11 @@ namespace Baza
         private void Start_Click(object sender, RoutedEventArgs e)
         {
             inquiry = inquiryTextBox.Text;
-          
-            try
-            {
-                SqlCommand command = new SqlCommand();
 
-                command.CommandText = inquiry;
-                command.Connection = connection;
+            DataShow(inquiry, wypozyczeniGrid);
 
-                command.ExecuteScalar();
-
-                SqlDataAdapter da = new SqlDataAdapter(command);
-                DataTable dt = new DataTable("Car Rent");
-                da.Fill(dt);
-
-                g1.ItemsSource = dt.DefaultView;
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show("Inquiry Failure", ex.Message);
-            }
+            inquiry = "Select  klientID, count(klientID) as 'Wypożyczenia' from wypozyczenia group by KlientID";
+            DataShow(inquiry, raportyGrid);
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
@@ -104,9 +89,6 @@ namespace Baza
         {
 
         }
-
-       
-
         private void DataShow(string inquiry, DataGrid dataGrid)     // funkcja pomocnicza - przyjmuje 2 parametry (zapytanie, siatka do wyświetlania danych)
         {
             try
@@ -142,8 +124,6 @@ namespace Baza
 
             inquiry = "Select * from klienci";                             // Odświeżenie widoku po dodaniu rekordu
             DataShow(inquiry, klienciGrid);
-
-
         }
 
         private void klienci_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -164,6 +144,37 @@ namespace Baza
 
             inquiry = "Select * from klienci";                             // Odświeżenie widoku po dodaniu rekordu
             DataShow(inquiry, klienciGrid);
+        }
+
+        private void topClient_Click(object sender, RoutedEventArgs e)
+        {
+            // inquiry = "Select klienci.imie, klienci.nazwisko, samochody.marka, wypozyczenia.wypID from klienci, samochody, wypozyczenia where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
+            // inquiry = "Select klienci.imie, klienci.nazwisko, samochody.marka, wypozyczenia.wypID from klienci, samochody, wypozyczenia where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
+            // inquiry = "Select  klientID, klienci.imie, count(klientID) as 'Wypożyczenia' from wypozyczenia, klienci, samochody where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID group by KlientID";
+            // inquiry = "Select  klientID, klienci.imie, count(klientID) as 'Wypożyczenia' from wypozyczenia, klienci, where wypozyczenia.klientID = klienci.klientID group by KlientID";
+            inquiry = "Select  klientID, count(klientID) as 'Wypożyczenia' from wypozyczenia group by KlientID";
+            DataShow(inquiry, raportyGrid);
+        }
+
+        private void addWypozyczenie(object sender, RoutedEventArgs e)
+        {
+            string samID = samIDTextBox.Text;
+            string pracID = pracIDTextBox.Text;
+            string klientID = klientIDTextBox.Text;
+            string datawyp = dataWypozyczeniaDatePicker.Text;
+            string datazwr = dataZwrotuDatePicker.Text;
+            string koszt = koszTextBox.Text;
+
+            // insert into  wypozyczenia values(1, 1, 1, '2018-3-25', '2018-3-28', 1200)
+
+            inquiry = "insert into wypozyczenia values('"+samID+"', '"+pracID+"', '"+klientID+"', '"+datawyp+"', '"+datazwr+"', '"+koszt+"')";
+
+            DataShow(inquiry, wypozyczeniGrid);
+        }
+
+        private void deleteWypozyczenie(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

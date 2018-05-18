@@ -22,8 +22,8 @@ namespace Baza
    
     public partial class MainWindow : Window
     {
-        private String inquiry;
-        private String id;
+        private String inquiry = null;
+        private String id = null;
         private SqlConnection connection;
         private DataRowView row;
 
@@ -69,12 +69,12 @@ namespace Baza
 
         private void Start_Click(object sender, RoutedEventArgs e)
         {
-            inquiry = inquiryTextBox.Text;
+              inquiry = inquiryTextBox.Text;
 
-            DataShow(inquiry, wypozyczeniGrid);
+              DataShow(inquiry, raportyGrid);
 
-            inquiry = "Select  klientID, count(klientID) as 'Wypożyczenia' from wypozyczenia group by KlientID";
-            DataShow(inquiry, raportyGrid);
+         //  inquiry = "Select  klientID, count(klientID) as 'Wypożyczenia' from wypozyczenia group by KlientID";
+         //  DataShow(inquiry, raportyGrid);
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
@@ -110,34 +110,56 @@ namespace Baza
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Inquiry Failure", ex.Message);
+               MessageBox.Show("Zmiany zatwierdzone", ex.Message);
             }
         }
 
         private void add_Click(object sender, RoutedEventArgs e)
         {
-            string name = nameTextBox.Text;
-            string surname =surnameTextBox.Text;
-            string pesel = peselTextBox.Text;
+            string name;
+            string surname;
+            string pesel;
 
-            inquiry = "insert into klienci values('"+name+"', '"+surname+"', '"+pesel+"')";  
+            if (sender == addClient)
+            {
+                name = nameTextBoxC.Text;
+                surname = surnameTextBoxC.Text;
+                pesel = peselTextBoxC.Text;
 
-            DataShow(inquiry, klienciGrid);                                // dodanie rekordu
+                inquiry = "insert into klienci values('" + name + "', '" + surname + "', '" + pesel + "')";
 
-            inquiry = "Select * from klienci";                             // Odświeżenie widoku po dodaniu rekordu
-            DataShow(inquiry, klienciGrid);
+                DataShow(inquiry, klienciGrid);                                // dodanie rekordu
+
+                inquiry = "Select * from klienci";                             // Odświeżenie widoku po dodaniu rekordu
+                DataShow(inquiry, klienciGrid);
+            }
+            else if (sender == addEmployee)
+            {
+                name = nameTextBoxE.Text;
+                surname = surnameTextBoxE.Text;
+
+                inquiry = "insert into pracownicy values('" + name + "', '" + surname + "')";
+
+                DataShow(inquiry, pracownicyGrid);                               // dodanie rekordu
+
+                inquiry = "Select * from pracownicy";                             // Odświeżenie widoku po dodaniu rekordu
+                DataShow(inquiry, pracownicyGrid);
+            }          
         }
 
         private void edit_Click(object sender, RoutedEventArgs e)
         {
+            string name;
+            string surname;
+            string pesel;
+
             if (sender == editClient)
             {
-                string name = nameTextBox.Text;
-                string surname = surnameTextBox.Text;
-                string pesel = peselTextBox.Text;
+               name = nameTextBoxC.Text;
+               surname = surnameTextBoxC.Text;
+               pesel = peselTextBoxC.Text;
 
                 // update klienci set imie='Janina' where klientID=34
-
 
                 inquiry = "update klienci set imie='" + name + "' where klientID=" + id + "";
                 DataShow(inquiry, klienciGrid);
@@ -150,6 +172,20 @@ namespace Baza
 
                 inquiry = "Select * from klienci";                             // Odświeżenie widoku po dodaniu rekordu
                 DataShow(inquiry, klienciGrid);
+            }
+            else if(sender == editEmployee)
+            {
+                name = nameTextBoxE.Text;
+                surname = surnameTextBoxE.Text;
+
+                inquiry = "update pracownicy set imie='" + name + "' where pracID=" + id + "";
+                DataShow(inquiry, pracownicyGrid);
+
+                inquiry = "update pracownicy set nazwisko='" + surname + "' where pracID=" + id + "";
+                DataShow(inquiry, pracownicyGrid);
+
+                inquiry = "Select * from pracownicy";                             // Odświeżenie widoku po dodaniu rekordu
+                DataShow(inquiry, pracownicyGrid);
             }
         }
 
@@ -185,24 +221,18 @@ namespace Baza
                 row = klienciGrid.SelectedItem as DataRowView;
                
                 id = row.Row.ItemArray[0].ToString();
-                nameTextBox.Text = row.Row.ItemArray[1].ToString();
-                surnameTextBox.Text = row.Row.ItemArray[2].ToString();
-                peselTextBox.Text = row.Row.ItemArray[3].ToString();
+                nameTextBoxC.Text = row.Row.ItemArray[1].ToString();
+                surnameTextBoxC.Text = row.Row.ItemArray[2].ToString();
+                peselTextBoxC.Text = row.Row.ItemArray[3].ToString();
             }
             else if (sender == pracownicyGrid)
             {
                 row = pracownicyGrid.SelectedItem as DataRowView;
 
                 id = row.Row.ItemArray[0].ToString();
-                nameTextBoxP.Text = row.Row.ItemArray[1].ToString();
-                surnameTextBoxP.Text = row.Row.ItemArray[2].ToString();
-            }
-
-            
-            
-            
-
-          
+                nameTextBoxE.Text = row.Row.ItemArray[1].ToString();
+                surnameTextBoxE.Text = row.Row.ItemArray[2].ToString();
+            }    
         }
 
        

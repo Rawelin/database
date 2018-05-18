@@ -42,11 +42,11 @@
 
                             <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10 0 0 0">
                                 <TextBlock>Imię:</TextBlock>
-                                <TextBox x:Name="nameTextBox" MaxLength="20"/>
+                                <TextBox x:Name="nameTextBoxC" MaxLength="20"/>
                                 <TextBlock>Nazwisko:</TextBlock>
-                                <TextBox x:Name="surnameTextBox" MaxLength="25"/>
+                                <TextBox x:Name="surnameTextBoxC" MaxLength="25"/>
                                 <TextBlock>Pesel:</TextBlock>
-                                <TextBox x:Name="peselTextBox" MaxLength="11"  PreviewTextInput="NumberValidationTextBox"/>
+                                <TextBox x:Name="peselTextBoxC" MaxLength="11"  PreviewTextInput="NumberValidationTextBox"/>
                                 <Button x:Name="addClient" Click="add_Click" Margin="0 10 0 0">Dodaj</Button>
                                 <Button x:Name="editClient" Click="edit_Click">Edytuj</Button>
                                 <Button x:Name="deleteClient" Click="delete_Click">Kasuj</Button>
@@ -61,17 +61,18 @@
                         <Grid Margin="10" Height="340">
 
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="450"/>
+                                <ColumnDefinition Width="9"/>
+                                <ColumnDefinition Width="441"/>
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
 
-                            <DataGrid Grid.Column="0" Name="pracownicyGrid" AutoGenerateColumns="True" SelectionChanged="grid_SelectionChanged" />
+                            <DataGrid Grid.Column="0" Name="pracownicyGrid" AutoGenerateColumns="True" SelectionChanged="grid_SelectionChanged" Grid.ColumnSpan="2" />
 
-                            <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10 0 0 0">
+                            <StackPanel Grid.Column="2" Orientation="Vertical" Margin="10 0 0 0">
                                 <TextBlock>Imię:</TextBlock>
-                                <TextBox x:Name="nameTextBoxP" MaxLength="20"/>
+                                <TextBox x:Name="nameTextBoxE" MaxLength="20"/>
                                 <TextBlock>Nazwisko:</TextBlock>
-                                <TextBox x:Name="surnameTextBoxP" MaxLength="25"/>
+                                <TextBox x:Name="surnameTextBoxE" MaxLength="25"/>
                                 <Button x:Name="addEmployee" Click="add_Click" Margin="0 10 0 0">Dodaj</Button>
                                 <Button x:Name="editEmployee" Click="edit_Click">Edytuj</Button>
                                 <Button x:Name="deleteEmployee" Click="delete_Click">Kasuj</Button>
@@ -138,7 +139,7 @@
                                 <ColumnDefinition Width="5*" />
                             </Grid.ColumnDefinitions>
 
-                            <Button Name="Start" Content="Start" Grid.Column="0" Margin="0 0 10 0" Click="Start_Click"/>
+                            <Button Name="Start" Content="Start" Grid.Column="0" Margin="0 0 10 0" Click="Start_Click" Height="26" VerticalAlignment="Bottom"/>
                             <Label Content="zapytanie: " Grid.Column="1"/>
                             <TextBox Grid.Column="2" Name="inquiryTextBox"/>
                         </Grid>
@@ -157,7 +158,7 @@
                                 <Button>Top Samochody</Button>
                                 <Button>Top Pracownicy</Button>
                             </StackPanel>
-                            
+
                         </Grid>
 
                     </StackPanel>

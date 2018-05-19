@@ -110,6 +110,24 @@ namespace Baza
                 DataShow(inquiry, samochodyGrid);                              // dodanie rekordu
                 refreshAllTAbles();                                            // odświeża wszystkie widoki
             }
+            else if(sender.Equals(addOrder))
+            {
+                string samID = samIDTextBox.Text;
+                string pracID = pracIDTextBox.Text;
+                string klientID = klientIDTextBox.Text;
+                string datawyp = dataWypozyczeniaDatePicker.Text;
+                string datazwr = dataZwrotuDatePicker.Text;
+                string koszt = koszTextBox.Text;
+
+                // insert into  wypozyczenia values(1, 1, 1, '2018-3-25', '2018-3-28', 1200)
+
+                inquiry = "insert into wypozyczenia values(" + samID + ", " + pracID + ", " + klientID + ", '2018-3-25', '2018-3-25', " + koszt + ")";
+
+                DataShow(inquiry, wypozyczeniGrid);
+
+                inquiry = "select klienci.imie, klienci.nazwisko, samochody.marka, wypozyczenia.wypID from klienci, samochody, wypozyczenia where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
+                DataShow(inquiry, wypozyczeniGrid);
+            }
         }
 
         private void edit_Click(object sender, RoutedEventArgs e)
@@ -184,12 +202,17 @@ namespace Baza
                 DataShow(inquiry, pracownicyGrid);                                // skasownie rekordu
                 refreshAllTAbles();                                               // odświeża wszystkie widoki
             }
-
             else if (sender.Equals(deleteCar))
             {
                 inquiry = "delete from samochody where samID=" + id + "";
                 DataShow(inquiry, samochodyGrid);                                  // skasownie rekordu
                 refreshAllTAbles();                                                // odświeża wszystkie widoki
+            }
+            else if(sender.Equals(deleteOrder))
+            {
+                inquiry = "delete from wypozyczenia where wypID=" + id + "";
+                DataShow(inquiry, wypozyczeniGrid);                                 // skasownie rekordu
+                refreshAllTAbles();
             }
         }
 
@@ -221,6 +244,16 @@ namespace Baza
                 modelTextBoxS.Text = row.Row.ItemArray[2].ToString();
                 colorTextBoxS.Text = row.Row.ItemArray[3].ToString();
             }
+            else if(sender.Equals(wypozyczeniGrid))
+            {
+                row = wypozyczeniGrid.SelectedItem as DataRowView;
+
+                id = row.Row.ItemArray[0].ToString();
+            }
+            else if(sender.Equals(historiaGrid))
+            {
+
+            }
         }
 
         private void topClient_Click(object sender, RoutedEventArgs e)
@@ -231,27 +264,6 @@ namespace Baza
             // inquiry = "Select  klientID, klienci.imie, count(klientID) as 'Wypożyczenia' from wypozyczenia, klienci, where wypozyczenia.klientID = klienci.klientID group by KlientID";
             inquiry = "Select  klientID, count(klientID) as 'Wypożyczenia' from wypozyczenia group by KlientID";
             DataShow(inquiry, raportyGrid);
-        }
-
-        private void addWypozyczenie(object sender, RoutedEventArgs e)
-        {
-            string samID = samIDTextBox.Text;
-            string pracID = pracIDTextBox.Text;
-            string klientID = klientIDTextBox.Text;
-            string datawyp = dataWypozyczeniaDatePicker.Text;
-            string datazwr = dataZwrotuDatePicker.Text;
-            string koszt = koszTextBox.Text;
-
-            // insert into  wypozyczenia values(1, 1, 1, '2018-3-25', '2018-3-28', 1200)
-
-            inquiry = "insert into wypozyczenia values("+samID+", "+pracID+", "+klientID+", "+datawyp+", "+datazwr+", "+koszt+")";
-
-            DataShow(inquiry, wypozyczeniGrid);
-        }
-
-        private void deleteWypozyczenie(object sender, RoutedEventArgs e)
-        {
-
         }
 
         // funkcje pomocnicze
@@ -297,8 +309,16 @@ namespace Baza
             DataShow(inquiry, samochodyGrid);
 
             // inquiry = "select klienci.imie, klienci.nazwisko, samochody.marka, wypozyczenia.wypID from klienci, samochody, wypozyczenia where wypozyczenia.klientID = 2 and wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
-            inquiry = "select klienci.imie, klienci.nazwisko, samochody.marka, wypozyczenia.wypID from klienci, samochody, wypozyczenia where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
+            inquiry = "select wypozyczenia.wypID, klienci.imie, klienci.nazwisko, samochody.marka from klienci, samochody, wypozyczenia where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
             DataShow(inquiry, wypozyczeniGrid);                                // Odświeżenie widoku wypożyczenia
+
+            inquiry = "select wypozyczenia.wypID, klienci.imie, klienci.nazwisko, samochody.marka, samochody.model, wypozyczenia.datawyp, wypozyczenia.datazwr from klienci, samochody, wypozyczenia where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
+            DataShow(inquiry, historiaGrid);
+        }
+
+        private void wypozyczeniGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }

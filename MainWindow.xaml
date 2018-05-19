@@ -118,7 +118,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <DataGrid Grid.Column="0"  Name="wypozyczeniGrid" AutoGenerateColumns="True"/>
+                            <DataGrid Grid.Column="0"  Name="wypozyczeniGrid" AutoGenerateColumns="True" SelectionChanged="grid_SelectionChanged"/>
 
                             <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10 0 0 0">
                                 <TextBlock>SamID:</TextBlock>
@@ -133,8 +133,8 @@
                                 <DatePicker x:Name="dataZwrotuDatePicker"></DatePicker>
                                 <TextBlock>Koszt</TextBlock>
                                 <TextBox x:Name="koszTextBox"/>
-                                <Button Click="addWypozyczenie" Margin="0 10 0 0">Zapisz</Button>
-                                <Button Click="deleteWypozyczenie">Kasuj</Button>
+                                <Button x:Name="addOrder" Click="add_Click" Margin="0 10 0 0">Zapisz</Button>
+                                <Button x:Name="deleteOrder" Click="delete_Click">Kasuj</Button>
                             </StackPanel>
                         </Grid>
                     </StackPanel>

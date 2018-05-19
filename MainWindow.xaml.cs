@@ -46,20 +46,8 @@ namespace Baza
                 // MessageBox.Show("Connected to db", "Successful");
                 Login login = new Login();
                 login.Show();
-               
-                inquiry =  "Select * from klienci";    
-                DataShow(inquiry, klienciGrid);
 
-                inquiry = "Select * from pracownicy";
-                DataShow(inquiry, pracownicyGrid);
-
-                inquiry = "Select * from samochody";
-                DataShow(inquiry, samochodyGrid);
-
-                // inquiry = "select klienci.imie, klienci.nazwisko, samochody.marka, wypozyczenia.wypID from klienci, samochody, wypozyczenia where wypozyczenia.klientID = 2 and wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
-                inquiry = "select klienci.imie, klienci.nazwisko, samochody.marka, wypozyczenia.wypID from klienci, samochody, wypozyczenia where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
-                DataShow(inquiry, wypozyczeniGrid);
-
+                refreshAllTAbles();                                                      // odświeża wszystkie widoki
             }
             catch (Exception ex)
             {
@@ -87,33 +75,6 @@ namespace Baza
             StartConnection();
         }
 
-        private void g1_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
-        private void DataShow(string inquiry, DataGrid dataGrid)     // funkcja pomocnicza - przyjmuje 2 parametry (zapytanie, siatka do wyświetlania danych)
-        {
-            try
-            {
-                SqlCommand command = new SqlCommand();
-
-                command.CommandText = inquiry;
-                command.Connection = connection;
-
-               // command.ExecuteScalar();
-
-                SqlDataAdapter da = new SqlDataAdapter(command);
-                DataTable dt = new DataTable("Car Rent");
-                da.Fill(dt);
-                
-                dataGrid.ItemsSource = dt.DefaultView;
-            }
-            catch (Exception ex)
-            { 
-                MessageBox.Show("Komunikat diagnostyczny do odczytywania błędów", ex.Message);
-            }
-        }
-
         private void add_Click(object sender, RoutedEventArgs e)
         {
             string name;
@@ -127,11 +88,8 @@ namespace Baza
                 pesel = peselTextBoxC.Text;
 
                 inquiry = "insert into klienci values('" + name + "', '" + surname + "', '" + pesel + "')";
-
                 DataShow(inquiry, klienciGrid);                                // dodanie rekordu
-
-                inquiry = "Select * from klienci";                             // Odświeżenie widoku po dodaniu rekordu
-                DataShow(inquiry, klienciGrid);
+                refreshAllTAbles();                                            // odświeża wszystkie widoki
             }
             else if (sender.Equals(addEmployee))
             {
@@ -139,11 +97,8 @@ namespace Baza
                 surname = surnameTextBoxE.Text;
 
                 inquiry = "insert into pracownicy values('" + name + "', '" + surname + "')";
-
-                DataShow(inquiry, pracownicyGrid);                               // dodanie rekordu
-
-                inquiry = "Select * from pracownicy";                             // Odświeżenie widoku po dodaniu rekordu
-                DataShow(inquiry, pracownicyGrid);
+                DataShow(inquiry, pracownicyGrid);                              // dodanie rekordu
+                refreshAllTAbles();                                             // odświeża wszystkie widoki
             }
             else if (sender.Equals(addCar))
             {
@@ -152,11 +107,8 @@ namespace Baza
                 string color = colorTextBoxS.Text;
 
                 inquiry = "insert into samochody values('" + brand + "', '" + model + "', '" + color + "')";
-
-                DataShow(inquiry, samochodyGrid);                               // dodanie rekordu
-
-                inquiry = "Select * from samochody";                             // Odświeżenie widoku po dodaniu rekordu
-                DataShow(inquiry, samochodyGrid);
+                DataShow(inquiry, samochodyGrid);                              // dodanie rekordu
+                refreshAllTAbles();                                            // odświeża wszystkie widoki
             }
         }
 
@@ -182,9 +134,7 @@ namespace Baza
 
                 inquiry = "update klienci set pesel='" + pesel + "' where klientID=" + id + "";
                 DataShow(inquiry, klienciGrid);
-
-                inquiry = "Select * from klienci";                             // Odświeżenie widoku po dodaniu rekordu
-                DataShow(inquiry, klienciGrid);
+                refreshAllTAbles();                                           // odświeża wszystkie widoki
             }
             else if(sender.Equals(editEmployee))
             {
@@ -197,8 +147,7 @@ namespace Baza
                 inquiry = "update pracownicy set nazwisko='" + surname + "' where pracID=" + id + "";
                 DataShow(inquiry, pracownicyGrid);
 
-                inquiry = "Select * from pracownicy";                             // Odświeżenie widoku po dodaniu rekordu
-                DataShow(inquiry, pracownicyGrid);
+                refreshAllTAbles();                                           // odświeża wszystkie widoki
             }
             else if(sender.Equals(editCar))
             {
@@ -215,9 +164,7 @@ namespace Baza
                 inquiry = "update samochody set kolor='" + color + "' where samID=" + id + "";
                 DataShow(inquiry, samochodyGrid);
 
-                inquiry = "Select * from samochody";                             // Odświeżenie widoku po dodaniu rekordu
-                DataShow(inquiry, samochodyGrid);
-
+                refreshAllTAbles();                                             // odświeża wszystkie widoki
             }
         }
 
@@ -227,33 +174,27 @@ namespace Baza
             if (sender.Equals(deleteClient))
             {
                 inquiry = "delete from klienci where klientID=" + id + "";
-                DataShow(inquiry, klienciGrid);                                // skasownie rekordu
+                DataShow(inquiry, klienciGrid);                                  // skasownie rekordu
 
-                inquiry = "Select * from klienci";                             // Odświeżenie widoku po dodaniu rekordu
-                DataShow(inquiry, klienciGrid);
+                refreshAllTAbles();                                              // odświeża wszystkie widoki
             }
             else if (sender.Equals(deleteEmployee))
             {
                 inquiry = "delete from pracownicy where pracID=" + id + "";
                 DataShow(inquiry, pracownicyGrid);                                // skasownie rekordu
-
-                inquiry = "Select * from pracownicy";                             // Odświeżenie widoku po dodaniu rekordu
-                DataShow(inquiry, pracownicyGrid);
+                refreshAllTAbles();                                               // odświeża wszystkie widoki
             }
 
             else if (sender.Equals(deleteCar))
             {
                 inquiry = "delete from samochody where samID=" + id + "";
-                DataShow(inquiry, samochodyGrid);                                    // skasownie rekordu
-
-                inquiry = "Select * from samochody";                             // Odświeżenie widoku po dodaniu rekordu
-                DataShow(inquiry, samochodyGrid);
+                DataShow(inquiry, samochodyGrid);                                  // skasownie rekordu
+                refreshAllTAbles();                                                // odświeża wszystkie widoki
             }
         }
 
         private void grid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-           
             if (sender.Equals(klienciGrid))
             {
                 row = klienciGrid.SelectedItem as DataRowView;
@@ -313,10 +254,51 @@ namespace Baza
 
         }
 
-        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)    // zapobiega wprowadzaniu liter 
+        // funkcje pomocnicze
+
+        private void DataShow(string inquiry, DataGrid dataGrid)     // funkcja do wyświetlania zapytan 
+        {                                                            // przyjmuje 2 parametry (zapytanie, siatka do wyświetlania danych)
+            try
+            {
+                SqlCommand command = new SqlCommand();
+
+                command.CommandText = inquiry;
+                command.Connection = connection;
+
+                // command.ExecuteScalar();
+
+                SqlDataAdapter da = new SqlDataAdapter(command);
+                DataTable dt = new DataTable("Car Rent");
+                da.Fill(dt);
+
+                dataGrid.ItemsSource = dt.DefaultView;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Komunikat diagnostyczny do odczytywania błędów", ex.Message);
+            }
+        }
+
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)    // funkcja zapobiegająca wprowadzaniu liter 
         {
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void refreshAllTAbles()
+        {
+            inquiry = "Select * from klienci";                                // Odświeżenie widoku klienci po dodaniu rekordu
+            DataShow(inquiry, klienciGrid);
+
+            inquiry = "Select * from pracownicy";                             // Odświeżenie widoku pracownicy po dodaniu rekordu
+            DataShow(inquiry, pracownicyGrid);
+
+            inquiry = "Select * from samochody";                              // Odświeżenie widoku samochody po dodaniu rekordu
+            DataShow(inquiry, samochodyGrid);
+
+            // inquiry = "select klienci.imie, klienci.nazwisko, samochody.marka, wypozyczenia.wypID from klienci, samochody, wypozyczenia where wypozyczenia.klientID = 2 and wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
+            inquiry = "select klienci.imie, klienci.nazwisko, samochody.marka, wypozyczenia.wypID from klienci, samochody, wypozyczenia where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
+            DataShow(inquiry, wypozyczeniGrid);                                // Odświeżenie widoku wypożyczenia
         }
     }
 }

@@ -118,7 +118,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <DataGrid Grid.Column="0"  Name="wypozyczeniGrid" AutoGenerateColumns="True"  SelectionChanged="g1_SelectionChanged" />
+                            <DataGrid Grid.Column="0"  Name="wypozyczeniGrid" AutoGenerateColumns="True"/>
 
                             <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10 0 0 0">
                                 <TextBlock>SamID:</TextBlock>
@@ -163,7 +163,7 @@
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
 
-                            <DataGrid Grid.Column="0" Name="raportyGrid" AutoGenerateColumns="True" SelectionChanged="g1_SelectionChanged" />
+                            <DataGrid Grid.Column="0" Name="raportyGrid" AutoGenerateColumns="True"/>
 
                             <StackPanel Grid.Column="1">
                                 <Button Click="topClient_Click">Top Klienci</Button>
@@ -186,7 +186,7 @@
                                 <RowDefinition Height="4*"/>
                             </Grid.RowDefinitions>
 
-                            <DataGrid Name="historiaGrid" AutoGenerateColumns="True" Margin="0,0,0,-41" Grid.RowSpan="3" SelectionChanged="g1_SelectionChanged" />
+                            <DataGrid Name="historiaGrid" AutoGenerateColumns="True" Margin="0,0,0,-41" Grid.RowSpan="3" />
                         </Grid>
                     </StackPanel>
 

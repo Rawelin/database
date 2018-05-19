@@ -109,8 +109,8 @@ namespace Baza
                 dataGrid.ItemsSource = dt.DefaultView;
             }
             catch (Exception ex)
-            {
-               MessageBox.Show("Zmiany zatwierdzone", ex.Message);
+            { 
+                MessageBox.Show("Komunikat diagnostyczny do odczytywania błędów", ex.Message);
             }
         }
 
@@ -120,7 +120,7 @@ namespace Baza
             string surname;
             string pesel;
 
-            if (sender == addClient)
+            if (sender.Equals(addClient))
             {
                 name = nameTextBoxC.Text;
                 surname = surnameTextBoxC.Text;
@@ -133,7 +133,7 @@ namespace Baza
                 inquiry = "Select * from klienci";                             // Odświeżenie widoku po dodaniu rekordu
                 DataShow(inquiry, klienciGrid);
             }
-            else if (sender == addEmployee)
+            else if (sender.Equals(addEmployee))
             {
                 name = nameTextBoxE.Text;
                 surname = surnameTextBoxE.Text;
@@ -144,7 +144,20 @@ namespace Baza
 
                 inquiry = "Select * from pracownicy";                             // Odświeżenie widoku po dodaniu rekordu
                 DataShow(inquiry, pracownicyGrid);
-            }          
+            }
+            else if (sender.Equals(addCar))
+            {
+                string brand = brandTextBoxS.Text;
+                string model = modelTextBoxS.Text;
+                string color = colorTextBoxS.Text;
+
+                inquiry = "insert into samochody values('" + brand + "', '" + model + "', '" + color + "')";
+
+                DataShow(inquiry, samochodyGrid);                               // dodanie rekordu
+
+                inquiry = "Select * from samochody";                             // Odświeżenie widoku po dodaniu rekordu
+                DataShow(inquiry, samochodyGrid);
+            }
         }
 
         private void edit_Click(object sender, RoutedEventArgs e)
@@ -153,7 +166,7 @@ namespace Baza
             string surname;
             string pesel;
 
-            if (sender == editClient)
+            if (sender.Equals(editClient))
             {
                name = nameTextBoxC.Text;
                surname = surnameTextBoxC.Text;
@@ -173,7 +186,7 @@ namespace Baza
                 inquiry = "Select * from klienci";                             // Odświeżenie widoku po dodaniu rekordu
                 DataShow(inquiry, klienciGrid);
             }
-            else if(sender == editEmployee)
+            else if(sender.Equals(editEmployee))
             {
                 name = nameTextBoxE.Text;
                 surname = surnameTextBoxE.Text;
@@ -187,36 +200,61 @@ namespace Baza
                 inquiry = "Select * from pracownicy";                             // Odświeżenie widoku po dodaniu rekordu
                 DataShow(inquiry, pracownicyGrid);
             }
+            else if(sender.Equals(editCar))
+            {
+                string brand = brandTextBoxS.Text;
+                string model = modelTextBoxS.Text;
+                string color = colorTextBoxS.Text;
+
+                inquiry = "update samochody set marka='" + brand + "' where samID=" + id + "";
+                DataShow(inquiry, samochodyGrid);
+
+                inquiry = "update samochody set model='" + model + "' where samID=" + id + "";
+                DataShow(inquiry, samochodyGrid);
+
+                inquiry = "update samochody set kolor='" + color + "' where samID=" + id + "";
+                DataShow(inquiry, samochodyGrid);
+
+                inquiry = "Select * from samochody";                             // Odświeżenie widoku po dodaniu rekordu
+                DataShow(inquiry, samochodyGrid);
+
+            }
         }
 
         private void delete_Click(object sender, RoutedEventArgs e)
         {
 
-            if (sender == deleteClient)
+            if (sender.Equals(deleteClient))
             {
                 inquiry = "delete from klienci where klientID=" + id + "";
-
                 DataShow(inquiry, klienciGrid);                                // skasownie rekordu
 
                 inquiry = "Select * from klienci";                             // Odświeżenie widoku po dodaniu rekordu
                 DataShow(inquiry, klienciGrid);
             }
-            else if (sender == deleteEmployee)
+            else if (sender.Equals(deleteEmployee))
             {
                 inquiry = "delete from pracownicy where pracID=" + id + "";
-
                 DataShow(inquiry, pracownicyGrid);                                // skasownie rekordu
 
                 inquiry = "Select * from pracownicy";                             // Odświeżenie widoku po dodaniu rekordu
                 DataShow(inquiry, pracownicyGrid);
             }
 
+            else if (sender.Equals(deleteCar))
+            {
+                inquiry = "delete from samochody where samID=" + id + "";
+                DataShow(inquiry, samochodyGrid);                                    // skasownie rekordu
+
+                inquiry = "Select * from samochody";                             // Odświeżenie widoku po dodaniu rekordu
+                DataShow(inquiry, samochodyGrid);
+            }
         }
 
         private void grid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
            
-            if (sender == klienciGrid)
+            if (sender.Equals(klienciGrid))
             {
                 row = klienciGrid.SelectedItem as DataRowView;
                
@@ -225,17 +263,24 @@ namespace Baza
                 surnameTextBoxC.Text = row.Row.ItemArray[2].ToString();
                 peselTextBoxC.Text = row.Row.ItemArray[3].ToString();
             }
-            else if (sender == pracownicyGrid)
+            else if (sender.Equals(pracownicyGrid))
             {
                 row = pracownicyGrid.SelectedItem as DataRowView;
 
                 id = row.Row.ItemArray[0].ToString();
                 nameTextBoxE.Text = row.Row.ItemArray[1].ToString();
                 surnameTextBoxE.Text = row.Row.ItemArray[2].ToString();
-            }    
-        }
+            }   
+            else if(sender.Equals(samochodyGrid))
+            {
+                row = samochodyGrid.SelectedItem as DataRowView;
 
-       
+                id = row.Row.ItemArray[0].ToString();
+                brandTextBoxS.Text = row.Row.ItemArray[1].ToString();
+                modelTextBoxS.Text = row.Row.ItemArray[2].ToString();
+                colorTextBoxS.Text = row.Row.ItemArray[3].ToString();
+            }
+        }
 
         private void topClient_Click(object sender, RoutedEventArgs e)
         {

@@ -27,25 +27,23 @@ namespace Baza
         private SqlConnection connection;
         private DataRowView row;
 
+        public List<Button> buttonList;
+
+
         public MainWindow()
         {
             InitializeComponent();
-            
-            Start.IsEnabled = false;
+            listInit();                          // inicjalizuje liste przyciskami
+            buttonsDisable();                    // ustawia wszystkie przyciski na disable
         }
-
-        private void StartConnection()
+       
+        public void StartConnection()
         {
             try
             {
                 connection = new SqlConnection();
                 connection.ConnectionString = ConfigurationManager.ConnectionStrings["wypozyczalnia"].ConnectionString;
                 connection.Open();
-
-                Start.IsEnabled = true;
-                // MessageBox.Show("Connected to db", "Successful");
-                Login login = new Login();
-                login.Show();
 
                 refreshAllTAbles();                                                      // odświeża wszystkie widoki
             }
@@ -70,9 +68,11 @@ namespace Baza
             Application.Current.Shutdown();
         }
 
-        private void Connect_Click(object sender, RoutedEventArgs e)
+        private void Login_Click(object sender, RoutedEventArgs e)
         {
-            StartConnection();
+            Login login = new Login(this);                                   //  Tworzenie obiektu klasy Login
+           // login.DataContext = this;
+            login.ShowDialog();                                              //  Wyświetlenie formularza logowania 
         }
 
         private void add_Click(object sender, RoutedEventArgs e)
@@ -314,11 +314,50 @@ namespace Baza
 
             inquiry = "select wypozyczenia.wypID, klienci.imie, klienci.nazwisko, samochody.marka, samochody.model, wypozyczenia.datawyp, wypozyczenia.datazwr from klienci, samochody, wypozyczenia where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
             DataShow(inquiry, historiaGrid);
+
         }
 
         private void wypozyczeniGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
         }
+
+        private void listInit()                              // funkcja dodaje przyciski do listy
+        {
+            buttonList = new List<Button>();
+
+            buttonList.Add(Start);
+            buttonList.Add(addClient);
+            buttonList.Add(editClient);
+            buttonList.Add(deleteClient);
+            buttonList.Add(addEmployee);
+            buttonList.Add(editEmployee);
+            buttonList.Add(deleteEmployee);
+            buttonList.Add(addCar);
+            buttonList.Add(editCar);
+            buttonList.Add(deleteCar);
+            buttonList.Add(addOrder);
+            buttonList.Add(deleteOrder);
+            buttonList.Add(topClients);
+            buttonList.Add(topCars);
+            buttonList.Add(topEmployee);
+        }
+
+        public void buttonsDisable()                                    // funkcja ustawiająca przyciski na disable
+        {
+            foreach (Button bt in buttonList)
+            {
+                bt.IsEnabled = false;
+            }
+        }
+
+        public void buttonsEnable()
+        {
+            foreach (Button bt in buttonList)
+            {
+                bt.IsEnabled = true;
+            }
+        }
+
     }
 }

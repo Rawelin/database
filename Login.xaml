@@ -9,11 +9,12 @@
 
     <Canvas>
         <Label Canvas.Left="81" Canvas.Top="28">Login</Label>
-        <TextBox Canvas.Left="125" Width="101" Canvas.Top="28"></TextBox>
+        <TextBox x:Name="loginTextBox" Canvas.Left="125" Width="101" Canvas.Top="28" Focusable="True"></TextBox>
         <Label Canvas.Top="50" Width="60" Canvas.Left="60">Password</Label>
-        <PasswordBox Canvas.Left="125" Width="101" RenderTransformOrigin="0.495,0.501" Canvas.Top="54"></PasswordBox>
+        <PasswordBox x:Name="passwordBox" Canvas.Left="125" Width="101" RenderTransformOrigin="0.495,0.501" Canvas.Top="54"></PasswordBox>
         <Button Canvas.Top="100" Canvas.Left="81" Width="67" RenderTransformOrigin="0.224,-0.545" Click="Login_Click" >Log in</Button>
-        <Button RenderTransformOrigin="4.415,8.273" Canvas.Left="153" Canvas.Top="100" Width="70" Click="Cancel_Click" >Cancel</Button>
+        <Button RenderTransformOrigin="4.415,8.273" Canvas.Left="156" Canvas.Top="100" Width="70" Click="Cancel_Click" >Cancel</Button>
+        <Label x:Name="messageLabel" Canvas.Top="129" Canvas.Left="7" Width="267" Content=""/>
     </Canvas>
 
 

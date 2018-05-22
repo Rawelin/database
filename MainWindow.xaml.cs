@@ -26,15 +26,19 @@ namespace Baza
         private String id = null;
         private SqlConnection connection;
         private DataRowView row;
+        private DateTime datawyp;
+        private DateTime datazwr;
 
-        public List<Button> buttonList;
-
+        private List<Button> userButtonsList;
+        private List<Button> adminButtonsList;
 
         public MainWindow()
         {
             InitializeComponent();
-            listInit();                          // inicjalizuje liste przyciskami
-            buttonsDisable();                    // ustawia wszystkie przyciski na disable
+            adminButtons();                                            // Inicjuje przyciski administratora
+            userButtons();                                             // Inicjuje przycisi użytkownika
+            adminButtonsDisable();                                     // Deaktywuje wszystkie przyciski
+            loginEnable();                                             // Aktywuje logowanie
         }
        
         public void StartConnection()
@@ -65,7 +69,7 @@ namespace Baza
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            Application.Current.Shutdown();                                 //  zamyka całą aplikacje
         }
 
         private void Login_Click(object sender, RoutedEventArgs e)
@@ -73,6 +77,12 @@ namespace Baza
             Login login = new Login(this);                                   //  Tworzenie obiektu klasy Login
            // login.DataContext = this;
             login.ShowDialog();                                              //  Wyświetlenie formularza logowania 
+        }
+        private void Logout_Click(object sender, RoutedEventArgs e)
+        {
+            userButtonsDisable();                                             // wyłącza przyciski użytkownika
+            adminButtonsDisable();                                            // wyłącza przyciski administratora
+            loginEnable();                                                    // uaktywnia logowanie
         }
 
         private void add_Click(object sender, RoutedEventArgs e)
@@ -112,22 +122,40 @@ namespace Baza
             }
             else if(sender.Equals(addOrder))
             {
+
                 string samID = samIDTextBox.Text;
                 string pracID = pracIDTextBox.Text;
                 string klientID = klientIDTextBox.Text;
-                string datawyp = dataWypozyczeniaDatePicker.Text;
-                string datazwr = dataZwrotuDatePicker.Text;
+               // string datawyp = dataWypozyczeniaDatePicker.Text;
+               // string datazwr = dataZwrotuDatePicker.Text;
                 string koszt = koszTextBox.Text;
 
                 // insert into  wypozyczenia values(1, 1, 1, '2018-3-25', '2018-3-28', 1200)
 
-                inquiry = "insert into wypozyczenia values(" + samID + ", " + pracID + ", " + klientID + ", '2018-3-25', '2018-3-25', " + koszt + ")";
+                inquiry = "insert into wypozyczenia values(" + samID + ", " + pracID + ", " + klientID + ", '" + datawyp + "', '" + datazwr + "', " + koszt + ")";
 
                 DataShow(inquiry, wypozyczeniGrid);
 
-                inquiry = "select klienci.imie, klienci.nazwisko, samochody.marka, wypozyczenia.wypID from klienci, samochody, wypozyczenia where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
-                DataShow(inquiry, wypozyczeniGrid);
+                refreshAllTAbles();
             }
+        }
+
+        private void dataPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var picker = sender as DatePicker;
+            DateTime? date = picker.SelectedDate;
+
+            if (sender.Equals(dataWypozyczeniaDatePicker))
+            {
+                this.Title = date.Value.ToLongDateString();
+                this.datawyp = (DateTime)date;
+            }
+            else if (sender.Equals(dataZwrotuDatePicker))
+            {
+                this.Title = date.Value.ToLongDateString();
+                this.datazwr = (DateTime)date;
+            }
+
         }
 
         private void edit_Click(object sender, RoutedEventArgs e)
@@ -138,9 +166,9 @@ namespace Baza
 
             if (sender.Equals(editClient))
             {
-               name = nameTextBoxC.Text;
-               surname = surnameTextBoxC.Text;
-               pesel = peselTextBoxC.Text;
+                name = nameTextBoxC.Text;
+                surname = surnameTextBoxC.Text;
+                pesel = peselTextBoxC.Text;
 
                 // update klienci set imie='Janina' where klientID=34
 
@@ -221,7 +249,7 @@ namespace Baza
             if (sender.Equals(klienciGrid))
             {
                 row = klienciGrid.SelectedItem as DataRowView;
-               
+
                 id = row.Row.ItemArray[0].ToString();
                 nameTextBoxC.Text = row.Row.ItemArray[1].ToString();
                 surnameTextBoxC.Text = row.Row.ItemArray[2].ToString();
@@ -234,8 +262,8 @@ namespace Baza
                 id = row.Row.ItemArray[0].ToString();
                 nameTextBoxE.Text = row.Row.ItemArray[1].ToString();
                 surnameTextBoxE.Text = row.Row.ItemArray[2].ToString();
-            }   
-            else if(sender.Equals(samochodyGrid))
+            }
+            else if (sender.Equals(samochodyGrid))
             {
                 row = samochodyGrid.SelectedItem as DataRowView;
 
@@ -244,13 +272,13 @@ namespace Baza
                 modelTextBoxS.Text = row.Row.ItemArray[2].ToString();
                 colorTextBoxS.Text = row.Row.ItemArray[3].ToString();
             }
-            else if(sender.Equals(wypozyczeniGrid))
+            else if (sender.Equals(wypozyczeniGrid))
             {
                 row = wypozyczeniGrid.SelectedItem as DataRowView;
 
                 id = row.Row.ItemArray[0].ToString();
             }
-            else if(sender.Equals(historiaGrid))
+            else if (sender.Equals(historiaGrid))
             {
 
             }
@@ -309,7 +337,7 @@ namespace Baza
             DataShow(inquiry, samochodyGrid);
 
             // inquiry = "select klienci.imie, klienci.nazwisko, samochody.marka, wypozyczenia.wypID from klienci, samochody, wypozyczenia where wypozyczenia.klientID = 2 and wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
-            inquiry = "select wypozyczenia.wypID, klienci.imie, klienci.nazwisko, samochody.marka from klienci, samochody, wypozyczenia where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
+            inquiry = "select wypozyczenia.wypID, klienci.klientID, pracownicy.pracID, samochody.marka, samochody.model,  wypozyczenia.datawyp, wypozyczenia.datazwr, wypozyczenia.koszt from klienci, samochody, wypozyczenia, pracownicy where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID and wypozyczenia.pracID = pracownicy.pracID ";
             DataShow(inquiry, wypozyczeniGrid);                                // Odświeżenie widoku wypożyczenia
 
             inquiry = "select wypozyczenia.wypID, klienci.imie, klienci.nazwisko, samochody.marka, samochody.model, wypozyczenia.datawyp, wypozyczenia.datazwr from klienci, samochody, wypozyczenia where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
@@ -317,47 +345,81 @@ namespace Baza
 
         }
 
-        private void wypozyczeniGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void userButtons()                              // funkcja dodaje przyciski do listy
         {
+            userButtonsList = new List<Button>();
 
+            userButtonsList.Add(Start);
+            userButtonsList.Add(addClient);
+            userButtonsList.Add(addEmployee);
+            userButtonsList.Add(addCar);
+            userButtonsList.Add(addOrder);
+            userButtonsList.Add(topClients);
+            userButtonsList.Add(topCars);
+            userButtonsList.Add(topEmployee);
         }
 
-        private void listInit()                              // funkcja dodaje przyciski do listy
+        public void adminButtons()
         {
-            buttonList = new List<Button>();
+            adminButtonsList = new List<Button>();
 
-            buttonList.Add(Start);
-            buttonList.Add(addClient);
-            buttonList.Add(editClient);
-            buttonList.Add(deleteClient);
-            buttonList.Add(addEmployee);
-            buttonList.Add(editEmployee);
-            buttonList.Add(deleteEmployee);
-            buttonList.Add(addCar);
-            buttonList.Add(editCar);
-            buttonList.Add(deleteCar);
-            buttonList.Add(addOrder);
-            buttonList.Add(deleteOrder);
-            buttonList.Add(topClients);
-            buttonList.Add(topCars);
-            buttonList.Add(topEmployee);
+            adminButtonsList.Add(Start);
+            adminButtonsList.Add(addClient);
+            adminButtonsList.Add(editClient);
+            adminButtonsList.Add(deleteClient);
+            adminButtonsList.Add(addEmployee);
+            adminButtonsList.Add(editEmployee);
+            adminButtonsList.Add(deleteEmployee);
+            adminButtonsList.Add(addCar);
+            adminButtonsList.Add(editCar);
+            adminButtonsList.Add(deleteCar);
+            adminButtonsList.Add(addOrder);
+            adminButtonsList.Add(deleteOrder);
+            adminButtonsList.Add(topClients);
+            adminButtonsList.Add(topCars);
+            adminButtonsList.Add(topEmployee);
         }
 
-        public void buttonsDisable()                                    // funkcja ustawiająca przyciski na disable
+        public void userButtonsDisable()                                    // funkcja ustawiająca przyciski na disable
         {
-            foreach (Button bt in buttonList)
+            foreach (Button bt in userButtonsList)
             {
                 bt.IsEnabled = false;
             }
         }
 
-        public void buttonsEnable()
+        public void userButtonsEnable()
         {
-            foreach (Button bt in buttonList)
+            foreach (Button bt in userButtonsList)
             {
                 bt.IsEnabled = true;
             }
         }
 
+        public void adminButtonsDisable()                                    // funkcja ustawiająca przyciski na disable
+        {
+            foreach (Button bt in adminButtonsList)
+            {
+                bt.IsEnabled = false;
+            }
+        }
+
+        public void adminButtonsEnable()
+        {
+            foreach (Button bt in adminButtonsList)
+            {
+                bt.IsEnabled = true;
+            }
+        }
+        public void loginEnable()
+        {
+            login.IsEnabled = true;
+            logout.IsEnabled = false;
+        }
+        public void loginDisable()
+        {
+            login.IsEnabled = false;
+            logout.IsEnabled = true;
+        }
     }
 }

@@ -34,12 +34,21 @@ namespace Baza
      
         private void Login_Click(object sender, RoutedEventArgs e)
         {
-            if (this.loginTextBox.Text.Equals("m") && passwordBox.Password.ToString().Equals("a"))
+            if (this.loginTextBox.Text.Equals("") && passwordBox.Password.ToString().Equals(""))
             {
                 this.Close();
 
                 mainWindow.StartConnection();
-                mainWindow.buttonsEnable();
+                mainWindow.userButtonsEnable();
+                mainWindow.loginDisable();
+            }
+            else if (this.loginTextBox.Text.Equals("admin") && passwordBox.Password.ToString().Equals(""))
+            {
+                this.Close();
+
+                mainWindow.StartConnection();
+                mainWindow.adminButtonsEnable();
+                mainWindow.loginDisable();
             }
             else
             {

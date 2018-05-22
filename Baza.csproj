@@ -109,5 +109,9 @@
   <ItemGroup>
     <Resource Include="Resources\exit.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\login.png" />
+    <Resource Include="Resources\logout.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

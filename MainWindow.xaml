@@ -13,12 +13,12 @@
         <DockPanel>
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_File">
-                    <MenuItem x:Name="login" Header="Log_in" InputGestureText="Alt+I" Click="Login_Click">
+                    <MenuItem x:Name="login" Header="_Login" InputGestureText="Alt+L" Click="Login_Click">
                         <MenuItem.Icon>
                             <Image Source="./Resources/login.png" Height="25" Width="25" />
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem x:Name="logout" Header="_Log_out" InputGestureText="Alt+O" Click="Logout_Click">
+                    <MenuItem x:Name="logout" Header="Log_out" InputGestureText="Alt+O" Click="Logout_Click">
                         <MenuItem.Icon>
                             <Image Source="./Resources/logout.png" Height="25" Width="25" />
                         </MenuItem.Icon>
@@ -27,6 +27,11 @@
                         <MenuItem.Icon>
                             <Image Source="./Resources/exit.jpg" Height="25" Width="25"  />
                         </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Header="_Opcje">
+                    <MenuItem x:Name="Panel"  Header="_Panel Administratora"  InputGestureText="Alt+P" Click="Panel_Click">
+
                     </MenuItem>
                 </MenuItem>
             </Menu>
@@ -66,12 +71,11 @@
                         <Grid Margin="10" Height="340">
 
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="9"/>
-                                <ColumnDefinition Width="441"/>
+                                <ColumnDefinition Width="450"/>
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
 
-                            <DataGrid Grid.Column="0" Name="pracownicyGrid" AutoGenerateColumns="True" SelectionChanged="grid_SelectionChanged" Grid.ColumnSpan="2" />
+                            <DataGrid Grid.Column="0" Name="pracownicyGrid" AutoGenerateColumns="True" SelectionChanged="grid_SelectionChanged"  />
 
                             <StackPanel Grid.Column="2" Orientation="Vertical" Margin="10 0 0 0">
                                 <TextBlock>Imię:</TextBlock>
@@ -95,8 +99,7 @@
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
 
-
-                            <DataGrid Grid.Column="0" Name="samochodyGrid" AutoGenerateColumns="True" Margin="0,0,0,-41" Grid.RowSpan="3" SelectionChanged="grid_SelectionChanged" />
+                            <DataGrid Grid.Column="0" Name="samochodyGrid" AutoGenerateColumns="True"   SelectionChanged="grid_SelectionChanged" />
 
                             <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10 0 0 0">
                                 <TextBlock>Marka:</TextBlock>
@@ -185,13 +188,17 @@
                 <TabItem Header="Historia">
                     <StackPanel>
                         <Grid Margin="10" Height="250">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="146*"/>
+                                <ColumnDefinition Width="619*"/>
+                            </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="233*"/>
                                 <RowDefinition Height="33*"/>
                                 <RowDefinition Height="4*"/>
                             </Grid.RowDefinitions>
 
-                            <DataGrid Name="historiaGrid" AutoGenerateColumns="True" Margin="0,0,0,-41" Grid.RowSpan="3" />
+                            <DataGrid Name="historiaGrid" AutoGenerateColumns="True" Margin="0,0,0,-41" Grid.RowSpan="3" Grid.ColumnSpan="2" />
                         </Grid>
                     </StackPanel>
 

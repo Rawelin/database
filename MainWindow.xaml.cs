@@ -85,6 +85,12 @@ namespace Baza
             loginEnable();                                                    // uaktywnia logowanie
         }
 
+        private void Panel_Click(object sender, RoutedEventArgs e)
+        {
+            Panel panel = new Panel();
+            panel.ShowDialog();
+        }
+
         private void add_Click(object sender, RoutedEventArgs e)
         {
             string name;

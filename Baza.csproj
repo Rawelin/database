@@ -121,5 +121,13 @@
     <Resource Include="Resources\login.png" />
     <Resource Include="Resources\logout.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\blueCircle.png" />
+    <Resource Include="Resources\greenCircle.png" />
+    <Resource Include="Resources\redCircle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\base.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

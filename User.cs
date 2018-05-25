@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 
 namespace Baza
 {
-    class User
+    public class User
     {
+        private string id;
         private string login;
         private string password;
+
+        public User() { }
 
         public User(string login, string password)
         {
@@ -37,6 +40,17 @@ namespace Baza
             set
             {
                 this.password = value;
+            }
+        }
+        public string ID
+        {
+            get
+            {
+                return id;
+            }
+            set
+            {
+                this.id = value;
             }
         }
     }

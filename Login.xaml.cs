@@ -31,16 +31,17 @@ namespace Baza
            mainWindow = window;
         }
 
-     
+
         private void Login_Click(object sender, RoutedEventArgs e)
         {
-            if (this.loginTextBox.Text.Equals("") && passwordBox.Password.ToString().Equals(""))
+            if (this.loginTextBox.Text.Equals("user") && passwordBox.Password.ToString().Equals(""))
             {
                 this.Close();
 
                 mainWindow.StartConnection();
                 mainWindow.userButtonsEnable();
                 mainWindow.loginDisable();
+                mainWindow.Status.Content = "Połączony z bazą jako użytkownik";
             }
             else if (this.loginTextBox.Text.Equals("admin") && passwordBox.Password.ToString().Equals(""))
             {
@@ -49,17 +50,19 @@ namespace Baza
                 mainWindow.StartConnection();
                 mainWindow.adminButtonsEnable();
                 mainWindow.loginDisable();
+                mainWindow.Status.Content = "Połączony z bazą jako Administrator";
             }
             else
             {
                 loginTextBox.Text = "";
                 passwordBox.Password = "";
-                messageLabel.Content = "Podano zły login lub hasło";
+                messageLabel.Content = "Dane są nieprawidłowe.";
             }
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
+            MessageBox.Show("Nie połączono z bazą danych");
             this.Close();
         }
     }

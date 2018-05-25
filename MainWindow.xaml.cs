@@ -32,6 +32,7 @@ namespace Baza
         private List<Button> userButtonsList;
         private List<Button> adminButtonsList;
 
+
         public MainWindow()
         {
             InitializeComponent();
@@ -40,7 +41,7 @@ namespace Baza
             adminButtonsDisable();                                     // Deaktywuje wszystkie przyciski
             loginEnable();                                             // Aktywuje logowanie
         }
-       
+
         public void StartConnection()
         {
             try
@@ -421,6 +422,7 @@ namespace Baza
         {
             login.IsEnabled = true;
             logout.IsEnabled = false;
+            Status.Content = "Nie polączony z bazą";
         }
         public void loginDisable()
         {

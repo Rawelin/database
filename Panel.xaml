@@ -40,6 +40,7 @@
                 <PasswordBox x:Name="passwordBox" Margin="0 5 0 0"/>
                 <PasswordBox x:Name="repeatPasswordBox" Margin="0 5 0 0" />
                 <Button x:Name="changePasswordButton" Margin="0 15 0 0" Click="addUser_Click">Dodaj</Button>
+                <Button x:Name="closePanel" Margin="0 15 0 0" Click="closePanel_Click">Zamknij</Button>
             </StackPanel>
         </Grid>
         <Label x:Name="errorMessageLabel" Margin="50 10 50 0"></Label>

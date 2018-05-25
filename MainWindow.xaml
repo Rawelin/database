@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Baza"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="MainWindow" Height="490" Width="800"
         ResizeMode="NoResize"
+         Icon="./Resources/base.png"
         WindowStyle="ThreeDBorderWindow">
 
     <StackPanel>
@@ -204,9 +205,18 @@
 
                 </TabItem>
 
-
             </TabControl>
         </Grid>
+        <StackPanel Orientation="Horizontal">
+            <Label>Status:</Label>
+            <Label x:Name="Status" Content=" Niepołączony"/>
+            <Label x:Name="StatusPicture" Margin="590 3 0 0">
+                <StackPanel>
+                    <Image x:Name="red" Source="./Resources/redCircle.png" Height="10" Width="10"/>
+                </StackPanel>
+            </Label>
+        </StackPanel>
+        
 
     </StackPanel>
 </Window>

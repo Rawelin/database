@@ -6,15 +6,17 @@
         xmlns:local="clr-namespace:Baza"
         mc:Ignorable="d"
         ResizeMode="NoResize"
-        Title="Panel Administratora" Height="350" Width="400">
+        Title="Panel Administratora" Height="350" Width="600">
 
     <StackPanel>
         <Grid>
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="30"/>
                 <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="280"/>
+                <ColumnDefinition Width="20"/>
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="1" Margin="0 50 0 0">
@@ -32,6 +34,7 @@
                 <Label>Login</Label>
                 <Label>Hasło</Label>
                 <Label>Powtórz Hasło</Label>
+                <Button x:Name="closePanel" Margin="0 11 1 0" Click="closePanel_Click">Zamknij</Button>
 
             </StackPanel>
 
@@ -39,8 +42,18 @@
                 <TextBox x:Name="loginTextBox" Margin="0 2 0 0" />
                 <PasswordBox x:Name="passwordBox" Margin="0 5 0 0"/>
                 <PasswordBox x:Name="repeatPasswordBox" Margin="0 5 0 0" />
-                <Button x:Name="changePasswordButton" Margin="0 15 0 0" Click="addUser_Click">Dodaj</Button>
-                <Button x:Name="closePanel" Margin="0 15 0 0" Click="closePanel_Click">Zamknij</Button>
+                <Button x:Name="changePasswordButton" Margin="1 15 0 0" Click="addUser_Click">Dodaj</Button>
+            </StackPanel>
+
+            <StackPanel Grid.Column="4" Margin="10 25 10 10" Height="170">
+                <ListView  x:Name="UsersListView" Width="260" Height="170">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Użytkownicy" Width="250"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                
             </StackPanel>
         </Grid>
         <Label x:Name="errorMessageLabel" Margin="50 10 50 0"></Label>

@@ -29,53 +29,53 @@ namespace Baza
         private DateTime datawyp;
         private DateTime datazwr;
 
-        private List<Button> userButtonsList;
-        private List<Button> adminButtonsList;
+        private List<Button> userButtonsList;                         // lista przycisków dostępnych dla użytkownika 
+        private List<Button> adminButtonsList;                        // lista przycisków dostępnych dla administratora 
 
 
         public MainWindow()
         {
             InitializeComponent();
-            adminButtons();                                            // Inicjuje przyciski administratora
-            userButtons();                                             // Inicjuje przycisi użytkownika
-            adminButtonsDisable();                                     // Deaktywuje wszystkie przyciski
-            loginEnable();                                             // Aktywuje logowanie
+            adminButtons();                                            // inicjuje przyciski administratora
+            userButtons();                                             // inicjuje przycisi użytkownika
+            adminButtonsDisable();                                     // deaktywuje wszystkie przyciski
+            loginEnable();                                             // aktywuje logowanie
         }
 
         public void StartConnection()
         {
             try
             {
-                connection = new SqlConnection();
-                connection.ConnectionString = ConfigurationManager.ConnectionStrings["wypozyczalnia"].ConnectionString;
-                connection.Open();
+                connection = new SqlConnection();                      // tworzy nowe polączenie SQL
+                connection.ConnectionString = ConfigurationManager.ConnectionStrings["wypozyczalnia"].ConnectionString;  // ścieżka do bazy zmajdująca się w App.config
+                connection.Open();                                                       // otwiera polączenie
 
                 refreshAllTAbles();                                                      // odświeża wszystkie widoki
             }
-            catch (Exception ex)
+            catch (Exception ex)                                                         // wyłapuje wyjątki kiedy coś pójdzie nie tak
             {
-                MessageBox.Show("Connection Failure", ex.Message);
+                MessageBox.Show("Connection Failure", ex.Message);                       // wyświetla messagebox na ekranie
             }
         }
 
-        private void Start_Click(object sender, RoutedEventArgs e)
+        private void Start_Click(object sender, RoutedEventArgs e)                       // przycisk start w raportach
         {
-              inquiry = inquiryTextBox.Text;
+              inquiry = inquiryTextBox.Text;                                             // przypisuje zapytanie z textbox do amiennej inquiry
 
-              DataShow(inquiry, raportyGrid);
+              DataShow(inquiry, raportyGrid);                                            // funkcja wyświetla zapytanie na gridzie w raportach
 
          //  inquiry = "Select  klientID, count(klientID) as 'Wypożyczenia' from wypozyczenia group by KlientID";
          //  DataShow(inquiry, raportyGrid);
         }
 
-        private void Exit_Click(object sender, RoutedEventArgs e)
+        private void Exit_Click(object sender, RoutedEventArgs e)            // przycisk exit w menu Plik
         {
-            Application.Current.Shutdown();                                 //  zamyka całą aplikacje
+            Application.Current.Shutdown();                                  //  zamyka całą aplikacje
         }
 
-        private void Login_Click(object sender, RoutedEventArgs e)
+        private void Login_Click(object sender, RoutedEventArgs e)           // przycisk login w menu Plik
         {
-            Login login = new Login(this);                                   //  Tworzenie obiektu klasy Login
+            Login login = new Login(this);                                   //  Tworzenie obiektu klasy Login i pobranie głownego okna jako parametru
            // login.DataContext = this;
             login.ShowDialog();                                              //  Wyświetlenie formularza logowania 
         }
@@ -86,29 +86,29 @@ namespace Baza
             loginEnable();                                                    // uaktywnia logowanie
         }
 
-        private void Panel_Click(object sender, RoutedEventArgs e)
+        private void Panel_Click(object sender, RoutedEventArgs e)            // przycisk panel administratora w menu Opcje
         {
-            Panel panel = new Panel();
-            panel.ShowDialog();
+            Panel panel = new Panel();                                        // tworzy nowe okno klasy Panel
+            panel.ShowDialog();                                               // otwiera okno Panel                                    
         }
 
-        private void add_Click(object sender, RoutedEventArgs e)
+        private void add_Click(object sender, RoutedEventArgs e)              // wspolna metoda dla przycisków dodających 
         {
             string name;
             string surname;
             string pesel;
 
-            if (sender.Equals(addClient))
+            if (sender.Equals(addClient))                                     // wyłąpuje z której zakładki (TabItem) został naciśnięty przycisk
             {
-                name = nameTextBoxC.Text;
+                name = nameTextBoxC.Text;                                     // przypisuje zmiennej tekst z pola tekstowego w zakładce klienci
                 surname = surnameTextBoxC.Text;
                 pesel = peselTextBoxC.Text;
 
-                inquiry = "insert into klienci values('" + name + "', '" + surname + "', '" + pesel + "')";
-                DataShow(inquiry, klienciGrid);                                // dodanie rekordu
-                refreshAllTAbles();                                            // odświeża wszystkie widoki
+                inquiry = "insert into klienci values('" + name + "', '" + surname + "', '" + pesel + "')";  // zapytanie dodające klienta do bazy
+                DataShow(inquiry, klienciGrid);                               // dodanie rekordu
+                refreshAllTAbles();                                           // odświeża wszystkie widoki
             }
-            else if (sender.Equals(addEmployee))
+            else if (sender.Equals(addEmployee))                              // wyłąpuje z której zakładki (TabItem) został naciśnięty przycisk                
             {
                 name = nameTextBoxE.Text;
                 surname = surnameTextBoxE.Text;
@@ -147,25 +147,7 @@ namespace Baza
             }
         }
 
-        private void dataPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var picker = sender as DatePicker;
-            DateTime? date = picker.SelectedDate;
-
-            if (sender.Equals(dataWypozyczeniaDatePicker))
-            {
-                this.Title = date.Value.ToLongDateString();
-                this.datawyp = (DateTime)date;
-            }
-            else if (sender.Equals(dataZwrotuDatePicker))
-            {
-                this.Title = date.Value.ToLongDateString();
-                this.datazwr = (DateTime)date;
-            }
-
-        }
-
-        private void edit_Click(object sender, RoutedEventArgs e)
+        private void edit_Click(object sender, RoutedEventArgs e)        // wspolna metoda dla przycisków edytujących 
         {
             string name;
             string surname;
@@ -221,7 +203,7 @@ namespace Baza
             }
         }
 
-        private void delete_Click(object sender, RoutedEventArgs e)
+        private void delete_Click(object sender, RoutedEventArgs e)            // wspolna metoda dla przycisków kasujących 
         {
 
             if (sender.Equals(deleteClient))
@@ -251,8 +233,26 @@ namespace Baza
             }
         }
 
-        private void grid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void dataPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)    // metoda sczytująca datę z datapicker
         {
+            var picker = sender as DatePicker;
+            DateTime? date = picker.SelectedDate;
+
+            if (sender.Equals(dataWypozyczeniaDatePicker))
+            {
+                this.Title = date.Value.ToLongDateString();
+                this.datawyp = (DateTime)date;
+            }
+            else if (sender.Equals(dataZwrotuDatePicker))
+            {
+                this.Title = date.Value.ToLongDateString();
+                this.datazwr = (DateTime)date;
+            }
+
+        }
+
+        private void grid_SelectionChanged(object sender, SelectionChangedEventArgs e)     // wspólna metoda przypisująca dane do pól tekstowych 
+        {                                                                                  // w zależności na który wiersz klikniemy
             if (sender.Equals(klienciGrid))
             {
                 row = klienciGrid.SelectedItem as DataRowView;
@@ -307,22 +307,22 @@ namespace Baza
         {                                                            // przyjmuje 2 parametry (zapytanie, siatka do wyświetlania danych)
             try
             {
-                SqlCommand command = new SqlCommand();
+                SqlCommand command = new SqlCommand();               // tworzy nowy rozkaz SQL
 
-                command.CommandText = inquiry;
-                command.Connection = connection;
+                command.CommandText = inquiry;                       // wczytuje zapytanie SQL
+                command.Connection = connection;                     // ścieżka do bazy 
 
                 // command.ExecuteScalar();
 
-                SqlDataAdapter da = new SqlDataAdapter(command);
-                DataTable dt = new DataTable("Car Rent");
-                da.Fill(dt);
+                SqlDataAdapter da = new SqlDataAdapter(command);     // pobiera zapytanie do adaptera
+                DataTable dt = new DataTable("Car Rent");            // tworzy nową tabelę
+                da.Fill(dt);                                         // pobiera tabelę do adaptera
 
-                dataGrid.ItemsSource = dt.DefaultView;
+                dataGrid.ItemsSource = dt.DefaultView;               // wyświetla dane na gridzie z tabeli dt
             }
-            catch (Exception ex)
+            catch (Exception ex)                                     // wyłapuje wyjątki 
             {
-                MessageBox.Show("Komunikat diagnostyczny do odczytywania błędów", ex.Message);
+                MessageBox.Show("Komunikat diagnostyczny do odczytywania błędów", ex.Message);    // wyświetla messagebox na ekran
             }
         }
 
@@ -332,31 +332,31 @@ namespace Baza
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        private void refreshAllTAbles()
+        private void refreshAllTAbles()                                       // odświeża wszystkie tabele
         {
-            inquiry = "Select * from klienci";                                // Odświeżenie widoku klienci po dodaniu rekordu
+            inquiry = "Select * from klienci";                                // odświeżenie widoku klienci po dodaniu rekordu
             DataShow(inquiry, klienciGrid);
 
-            inquiry = "Select * from pracownicy";                             // Odświeżenie widoku pracownicy po dodaniu rekordu
+            inquiry = "Select * from pracownicy";                             // odświeżenie widoku pracownicy po dodaniu rekordu
             DataShow(inquiry, pracownicyGrid);
 
-            inquiry = "Select * from samochody";                              // Odświeżenie widoku samochody po dodaniu rekordu
+            inquiry = "Select * from samochody";                              // odświeżenie widoku samochody po dodaniu rekordu
             DataShow(inquiry, samochodyGrid);
 
             // inquiry = "select klienci.imie, klienci.nazwisko, samochody.marka, wypozyczenia.wypID from klienci, samochody, wypozyczenia where wypozyczenia.klientID = 2 and wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
             inquiry = "select wypozyczenia.wypID, klienci.klientID, pracownicy.pracID, samochody.marka, samochody.model,  wypozyczenia.datawyp, wypozyczenia.datazwr, wypozyczenia.koszt from klienci, samochody, wypozyczenia, pracownicy where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID and wypozyczenia.pracID = pracownicy.pracID ";
-            DataShow(inquiry, wypozyczeniGrid);                                // Odświeżenie widoku wypożyczenia
+            DataShow(inquiry, wypozyczeniGrid);                                // odświeżenie widoku wypożyczenia
 
             inquiry = "select wypozyczenia.wypID, klienci.imie, klienci.nazwisko, samochody.marka, samochody.model, wypozyczenia.datawyp, wypozyczenia.datazwr from klienci, samochody, wypozyczenia where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
             DataShow(inquiry, historiaGrid);
 
         }
 
-        private void userButtons()                              // funkcja dodaje przyciski do listy
+        private void userButtons()                              // funkcja dodaje przyciski do listy użytkownika
         {
-            userButtonsList = new List<Button>();
+            userButtonsList = new List<Button>();               // utworzenie nowej listy 
 
-            userButtonsList.Add(Start);
+            userButtonsList.Add(Start);                         // dodawanie przyciskó do listy
             userButtonsList.Add(addClient);
             userButtonsList.Add(addEmployee);
             userButtonsList.Add(addCar);
@@ -366,11 +366,12 @@ namespace Baza
             userButtonsList.Add(topEmployee);
         }
 
-        public void adminButtons()
+        public void adminButtons()                              // funkcja dodaje przyciski do listy użytkownika
         {
-            adminButtonsList = new List<Button>();
+            adminButtonsList = new List<Button>();              // utworzenie nowej listy 
 
-            adminButtonsList.Add(Start);
+
+            adminButtonsList.Add(Start);                        // dodawanie przyciskó do listy
             adminButtonsList.Add(addClient);
             adminButtonsList.Add(editClient);
             adminButtonsList.Add(deleteClient);
@@ -387,7 +388,7 @@ namespace Baza
             adminButtonsList.Add(topEmployee);
         }
 
-        public void userButtonsDisable()                                    // funkcja ustawiająca przyciski na disable
+        public void userButtonsDisable()                                    // funkcja ustawiająca przyciski użytkownika  na disable
         {
             foreach (Button bt in userButtonsList)
             {
@@ -395,7 +396,7 @@ namespace Baza
             }
         }
 
-        public void userButtonsEnable()
+        public void userButtonsEnable()                                     // funkcja ustawiająca przyciski użytkownika na enable
         {
             foreach (Button bt in userButtonsList)
             {
@@ -403,7 +404,7 @@ namespace Baza
             }
         }
 
-        public void adminButtonsDisable()                                    // funkcja ustawiająca przyciski na disable
+        public void adminButtonsDisable()                                    // funkcja ustawiająca przyciski administratora na disable
         {
             foreach (Button bt in adminButtonsList)
             {
@@ -411,20 +412,20 @@ namespace Baza
             }
         }
 
-        public void adminButtonsEnable()
+        public void adminButtonsEnable()                                     // funkcja ustawiająca przyciski administratora na enable
         {
             foreach (Button bt in adminButtonsList)
             {
                 bt.IsEnabled = true;
             }
         }
-        public void loginEnable()
+        public void loginEnable()                                            // funkcja ustawiająca przycisk login w menu Plik na enable
         {
             login.IsEnabled = true;
             logout.IsEnabled = false;
             Status.Content = "Nie polączony z bazą";
         }
-        public void loginDisable()
+        public void loginDisable()                                          // funkcja ustawiająca przycisk login w menu Plik na disable
         {
             login.IsEnabled = false;
             logout.IsEnabled = true;

@@ -9,10 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
 using System.Configuration;                       // for ConfigurationManger - add references in solution explorer
 using System.Data;                                // for DataTable
 using System.Text.RegularExpressions;
@@ -28,6 +25,7 @@ namespace Baza
         private DataRowView row;
         private DateTime datawyp;
         private DateTime datazwr;
+        private Utility utility;
 
         private List<Button> userButtonsList;                         // lista przycisków dostępnych dla użytkownika 
         private List<Button> adminButtonsList;                        // lista przycisków dostępnych dla administratora 
@@ -51,6 +49,17 @@ namespace Baza
                 connection.Open();                                                       // otwiera polączenie
 
                 refreshAllTAbles();                                                      // odświeża wszystkie widoki
+
+                utility = new Utility(connection);
+
+                string inq1 = "select * from samochody";
+                string inq2 = "select * from klienci";
+                string inq3 = "select * from pracownicy";
+
+                utility.addItemsToComboBox(inq1, samochodyComboBox);
+                utility.addItemsToComboBox(inq2, klienciComboBox);
+                utility.addItemsToComboBox(inq3, pracownicyComboBox);
+
             }
             catch (Exception ex)                                                         // wyłapuje wyjątki kiedy coś pójdzie nie tak
             {
@@ -257,33 +266,50 @@ namespace Baza
             {
                 row = klienciGrid.SelectedItem as DataRowView;
 
-                id = row.Row.ItemArray[0].ToString();
-                nameTextBoxC.Text = row.Row.ItemArray[1].ToString();
-                surnameTextBoxC.Text = row.Row.ItemArray[2].ToString();
-                peselTextBoxC.Text = row.Row.ItemArray[3].ToString();
+                if (row != null)
+                {
+                    id = row.Row.ItemArray[0].ToString();
+
+                    nameTextBoxC.Text = row.Row.ItemArray[1].ToString();
+                    surnameTextBoxC.Text = row.Row.ItemArray[2].ToString();
+                    peselTextBoxC.Text = row.Row.ItemArray[3].ToString();
+                }
+              
             }
             else if (sender.Equals(pracownicyGrid))
             {
                 row = pracownicyGrid.SelectedItem as DataRowView;
 
-                id = row.Row.ItemArray[0].ToString();
-                nameTextBoxE.Text = row.Row.ItemArray[1].ToString();
-                surnameTextBoxE.Text = row.Row.ItemArray[2].ToString();
+                if (row != null)
+                {
+                    id = row.Row.ItemArray[0].ToString();
+
+                    nameTextBoxE.Text = row.Row.ItemArray[1].ToString();
+                    surnameTextBoxE.Text = row.Row.ItemArray[2].ToString();
+                }
+             
             }
             else if (sender.Equals(samochodyGrid))
             {
                 row = samochodyGrid.SelectedItem as DataRowView;
 
-                id = row.Row.ItemArray[0].ToString();
-                brandTextBoxS.Text = row.Row.ItemArray[1].ToString();
-                modelTextBoxS.Text = row.Row.ItemArray[2].ToString();
-                colorTextBoxS.Text = row.Row.ItemArray[3].ToString();
+                if (row != null)
+                {
+                    id = row.Row.ItemArray[0].ToString();
+
+                    brandTextBoxS.Text = row.Row.ItemArray[1].ToString();
+                    modelTextBoxS.Text = row.Row.ItemArray[2].ToString();
+                    colorTextBoxS.Text = row.Row.ItemArray[3].ToString();
+                }
+           
             }
             else if (sender.Equals(wypozyczeniGrid))
             {
                 row = wypozyczeniGrid.SelectedItem as DataRowView;
+               // int noOfRows = wypozyczeniGrid.Items.Count;
 
-                id = row.Row.ItemArray[0].ToString();
+                if(row != null)
+                    id = row.Row.ItemArray[0].ToString();
             }
             else if (sender.Equals(historiaGrid))
             {
@@ -343,11 +369,15 @@ namespace Baza
             inquiry = "Select * from samochody";                              // odświeżenie widoku samochody po dodaniu rekordu
             DataShow(inquiry, samochodyGrid);
 
-            // inquiry = "select klienci.imie, klienci.nazwisko, samochody.marka, wypozyczenia.wypID from klienci, samochody, wypozyczenia where wypozyczenia.klientID = 2 and wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
-            inquiry = "select wypozyczenia.wypID, klienci.klientID, pracownicy.pracID, samochody.marka, samochody.model,  wypozyczenia.datawyp, wypozyczenia.datazwr, wypozyczenia.koszt from klienci, samochody, wypozyczenia, pracownicy where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID and wypozyczenia.pracID = pracownicy.pracID ";
+            inquiry = "select wypozyczenia.wypID, klienci.imie, klienci.nazwisko, samochody.marka, samochody.model, pracownicy.pracID, pracownicy.imie as imie, pracownicy.nazwisko as nazwisko, wypozyczenia.datawyp, wypozyczenia.datazwr, wypozyczenia.koszt " +
+                "from klienci, samochody, wypozyczenia, pracownicy " +
+                "where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID and wypozyczenia.pracID = pracownicy.pracID";
+           // inquiry = "select wypozyczenia.wypID, klienci.klientID, pracownicy.pracID, samochody.marka, samochody.model,  wypozyczenia.datawyp, wypozyczenia.datazwr, wypozyczenia.koszt from klienci, samochody, wypozyczenia, pracownicy where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID and wypozyczenia.pracID = pracownicy.pracID ";
             DataShow(inquiry, wypozyczeniGrid);                                // odświeżenie widoku wypożyczenia
 
-            inquiry = "select wypozyczenia.wypID, klienci.imie, klienci.nazwisko, samochody.marka, samochody.model, wypozyczenia.datawyp, wypozyczenia.datazwr from klienci, samochody, wypozyczenia where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
+            inquiry = "select wypozyczenia.wypID, klienci.imie, klienci.nazwisko, samochody.marka, samochody.model, wypozyczenia.datawyp, wypozyczenia.datazwr " +
+                "from klienci, samochody, wypozyczenia " +
+                "where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
             DataShow(inquiry, historiaGrid);
 
         }

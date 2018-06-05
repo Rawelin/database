@@ -132,10 +132,13 @@
                             <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10 0 0 0">
                                 <TextBlock>SamID:</TextBlock>
                                 <TextBox x:Name="samIDTextBox" Text="{Binding Path=CurrentItem}"/>
+                                <ComboBox x:Name="samochodyComboBox"></ComboBox>
                                 <TextBlock>pracID:</TextBlock>
                                 <TextBox x:Name="pracIDTextBox"/>
+                                <ComboBox x:Name="pracownicyComboBox"></ComboBox>
                                 <TextBlock>KlientID:</TextBlock>
                                 <TextBox x:Name="klientIDTextBox"/>
+                                <ComboBox x:Name="klienciComboBox"></ComboBox>
                                 <TextBlock >Data wypożyczenia:</TextBlock>
                                 <DatePicker x:Name="dataWypozyczeniaDatePicker" SelectedDateChanged="dataPicker_SelectionChanged"></DatePicker>
                                 <TextBlock>Data zwrotu:</TextBlock>

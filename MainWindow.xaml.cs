@@ -10,7 +10,6 @@ using System.Text.RegularExpressions;
 
 namespace Baza
 {
-   
     public partial class MainWindow : Window
     {
         private String inquiry = null;
@@ -20,10 +19,8 @@ namespace Baza
         private DateTime datawyp;
         private DateTime datazwr;
         private Utility utility;
-
         private List<Button> userButtonsList;                         // lista przycisków dostępnych dla użytkownika 
         private List<Button> adminButtonsList;                        // lista przycisków dostępnych dla administratora 
-
 
         public MainWindow()
         {
@@ -53,7 +50,6 @@ namespace Baza
                 utility.addItemsToComboBox(inq1, samochodyComboBox);                    // dodawanie pól z bazy do combobox
                 utility.addItemsToComboBox(inq2, klienciComboBox);
                 utility.addItemsToComboBox(inq3, pracownicyComboBox);
-
             }
             catch (Exception ex)                                                         // wyłapuje wyjątki kiedy coś pójdzie nie tak
             {
@@ -64,7 +60,6 @@ namespace Baza
         private void Start_Click(object sender, RoutedEventArgs e)                       // przycisk start w raportach
         {
               inquiry = inquiryTextBox.Text;                                             // przypisuje zapytanie z textbox do amiennej inquiry
-
               DataShow(inquiry, raportyGrid);                                            // funkcja wyświetla zapytanie na gridzie w raportach
 
          //  inquiry = "Select  klientID, count(klientID) as 'Wypożyczenia' from wypozyczenia group by KlientID";
@@ -132,14 +127,6 @@ namespace Baza
             }
             else if(sender.Equals(addOrder))
             {
-
-                // string samID = samochodyComboBox.Text;
-                // string pracID = pracIDTextBox.Text;
-                // string klientID = klientIDTextBox.Text;
-                // string datawyp = dataWypozyczeniaDatePicker.Text;
-                // string datazwr = dataZwrotuDatePicker.Text;
-                // insert into  wypozyczenia values(1, 1, 1, '2018-3-25', '2018-3-28', 1200)          
-
                 string path;
                 string trimmedPath;
 
@@ -166,7 +153,7 @@ namespace Baza
                     inquiry = "insert into wypozyczenia values(" + samID + ", " + pracID + ", " + klientID + ", '" + datawyp + "', '" + datazwr + "', " + koszt + ")";
 
                     DataShow(inquiry, wypozyczeniGrid);
-
+                
                     refreshAllTAbles();
 
                     MessageBox.Show("Dodano do bazy");
@@ -174,9 +161,7 @@ namespace Baza
                 else
                 {
                     MessageBox.Show("Pola nie zostały wypełnione");
-                }
-
-              
+                }       
             }
         }
 
@@ -281,7 +266,6 @@ namespace Baza
                 this.Title = date.Value.ToLongDateString();
                 this.datazwr = (DateTime)date;
             }
-
         }
 
         private void grid_SelectionChanged(object sender, SelectionChangedEventArgs e)     // wspólna metoda przypisująca dane do pól tekstowych 
@@ -297,8 +281,7 @@ namespace Baza
                     nameTextBoxC.Text = row.Row.ItemArray[1].ToString();
                     surnameTextBoxC.Text = row.Row.ItemArray[2].ToString();
                     peselTextBoxC.Text = row.Row.ItemArray[3].ToString();
-                }
-              
+                }            
             }
             else if (sender.Equals(pracownicyGrid))
             {
@@ -310,8 +293,7 @@ namespace Baza
 
                     nameTextBoxE.Text = row.Row.ItemArray[1].ToString();
                     surnameTextBoxE.Text = row.Row.ItemArray[2].ToString();
-                }
-             
+                }   
             }
             else if (sender.Equals(samochodyGrid))
             {
@@ -324,8 +306,7 @@ namespace Baza
                     brandTextBoxS.Text = row.Row.ItemArray[1].ToString();
                     modelTextBoxS.Text = row.Row.ItemArray[2].ToString();
                     colorTextBoxS.Text = row.Row.ItemArray[3].ToString();
-                }
-           
+                }   
             }
             else if (sender.Equals(wypozyczeniGrid))
             {

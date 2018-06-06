@@ -23,41 +23,52 @@ namespace Baza
     {
         public string login;
         public string password;
-        MainWindow mainWindow;                                  // obiekt klasy MainWindow
+        public MainWindow mainWindow;                                     // obiekt klasy MainWindow
+        public List<User> usersList;                                      // lista użytkowników
+        public List<User> adminList;
 
-        public Login(MainWindow window)                         // konstruktor pobierający MainWindow
+        public Login(MainWindow window)                                   // konstruktor pobierający MainWindow
         {
            InitializeComponent();
-           mainWindow = window;                                 // inicjalizacja mainWindow obiektem pobranym przez konstruktor
+           mainWindow = window;                                           // inicjalizacja mainWindow obiektem pobranym przez konstruktor
+           usersList = Serialization.LoadUserFromFile(@"user.xml");       // funkcja wgrywająca użytkowników do listy z pliku
+           adminList = Serialization.LoadUserFromFile(@"admin.xml");      // funkcja wgrywająca administratorów do listy z pliku
         }
 
 
-        private void Login_Click(object sender, RoutedEventArgs e)      // metoda przycisku login 
+        private void Login_Click(object sender, RoutedEventArgs e)         // metoda przycisku login 
         {
-            if (this.loginTextBox.Text.Equals("user") && passwordBox.Password.ToString().Equals(""))   // walidacja loginu i hasła dla użytkownika
-            {
-                this.Close();                                           // zamyka okno Login
 
-                mainWindow.StartConnection();                           // aktywuje funkcję z MainWindow
-                mainWindow.userButtonsEnable();
-                mainWindow.loginDisable();
-                mainWindow.Status.Content = "Połączony z bazą jako użytkownik";   // aktualizuje etykietę napisem
-            }
-            else if (this.loginTextBox.Text.Equals("admin") && passwordBox.Password.ToString().Equals("")) // walidacja loginu i hasła dla administratora
+            for (int i = 0; i < usersList.Count; i++)                      // sprawdza w pętli czy jakiś login i hasło pasują do zapisanych w pliku
             {
-                this.Close();                                           // zamyka okno Login
+                if (this.loginTextBox.Text.Equals(usersList[i].Login) && passwordBox.Password.Equals(usersList[i].Password))   // walidacja loginu i hasła dla użytkownika
+                {
+                    this.Close();                                           // zamyka okno Login
 
-                mainWindow.StartConnection();                           // aktywuje funkcję z MainWindow
-                mainWindow.adminButtonsEnable();
-                mainWindow.loginDisable();
-                mainWindow.Status.Content = "Połączony z bazą jako Administrator";  // aktualizuje etykietę napisem
+                    mainWindow.StartConnection();                           // aktywuje funkcję z MainWindow
+                    mainWindow.userButtonsEnable();
+                    mainWindow.loginDisable();
+                    mainWindow.Status.Content = "Połączony z bazą jako użytkownik " + usersList[i].Login;   // aktualizuje etykietę napisem
+                }
+              
             }
-            else
+
+            for (int i = 0; i < adminList.Count; i++)                      // sprawdza w pętli czy jakiś login i hasło pasują do zapisanych w pliku 
             {
-                loginTextBox.Text = "";                                 // czyści pole tekstowe login
-                passwordBox.Password = "";                              // czyści pole pasword
-                messageLabel.Content = "Dane są nieprawidłowe.";
+                if (this.loginTextBox.Text.Equals(adminList[i].Login) && passwordBox.Password.ToString().Equals(adminList[i].Password)) // walidacja loginu i hasła dla administratora
+                {
+                    this.Close();                                           // zamyka okno Login
+
+                    mainWindow.StartConnection();                           // aktywuje funkcję z MainWindow
+                    mainWindow.adminButtonsEnable();
+                    mainWindow.loginDisable();
+                    mainWindow.Status.Content = "Połączony z bazą jako Administrator";  // aktualizuje etykietę napisem
+                }
             }
+      
+            loginTextBox.Text = "";                                    // czyści pole tekstowe login
+            passwordBox.Password = "";                                 // czyści pole pasword
+            messageLabel.Content = "Dane są nieprawidłowe.";
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)     // metoda przycisku cancel

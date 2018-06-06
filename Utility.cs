@@ -1,6 +1,7 @@
 ﻿using System.Data.SqlClient;
 using System.Windows.Controls;
 
+
 namespace Baza
 {
     public class Utility
@@ -16,6 +17,8 @@ namespace Baza
         {
             SqlCommand cmd = new SqlCommand(inq, connection);
             SqlDataReader DR = cmd.ExecuteReader();
+
+            comboBox.Items.Clear();
 
             while (DR.Read())
             {

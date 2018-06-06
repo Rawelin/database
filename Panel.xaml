@@ -22,12 +22,13 @@
             <StackPanel Grid.Column="1" Margin="0 50 0 0">
                 <Label>Login Admin</Label>
                 <Label>Hasło Admin</Label>
+                <Button x:Name="hasloAdminButton" Click="hasloAdmin_Click" Margin="0 12 1 0">Hasło Admin</Button>
             </StackPanel>
 
             <StackPanel  Grid.Column="2" Margin="0 50 0 0">
                 <TextBox x:Name="loginAdminTextBox" Margin="0 2 0 0" />
                 <PasswordBox x:Name="passwordAdminBox" Margin="0 5 0 0"/>
-                <Button x:Name="adminLoginButton" Margin="0 15 0 0" Click="adminLaogin_Click" >Login</Button>
+                <Button x:Name="adminLoginButton" Margin="1 15 0 0" Click="adminLaogin_Click" >Login</Button>
             </StackPanel>
 
             <StackPanel Grid.Column="1" Margin="0 150 0 0" >
@@ -53,8 +54,12 @@
                         </GridView>
                     </ListView.View>
                 </ListView>
-                
             </StackPanel>
+            <StackPanel Grid.Column="4" Margin="0 240 160 0" Width="100">
+                <Button x:Name="removeUserButton" Click="removeUser_Click">Usuń</Button>
+            </StackPanel>
+            
+            
         </Grid>
         <Label x:Name="errorMessageLabel" Margin="50 10 50 0"></Label>
     </StackPanel>

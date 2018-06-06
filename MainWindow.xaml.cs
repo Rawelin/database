@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-
 using System.Configuration;                       // for ConfigurationManger - add references in solution explorer
 using System.Data;                                // for DataTable
 using System.Text.RegularExpressions;
@@ -56,7 +50,7 @@ namespace Baza
                 string inq2 = "select * from klienci";
                 string inq3 = "select * from pracownicy";
 
-                utility.addItemsToComboBox(inq1, samochodyComboBox);
+                utility.addItemsToComboBox(inq1, samochodyComboBox);                    // dodawanie pól z bazy do combobox
                 utility.addItemsToComboBox(inq2, klienciComboBox);
                 utility.addItemsToComboBox(inq3, pracownicyComboBox);
 
@@ -139,20 +133,50 @@ namespace Baza
             else if(sender.Equals(addOrder))
             {
 
-                string samID = samIDTextBox.Text;
-                string pracID = pracIDTextBox.Text;
-                string klientID = klientIDTextBox.Text;
-               // string datawyp = dataWypozyczeniaDatePicker.Text;
-               // string datazwr = dataZwrotuDatePicker.Text;
-                string koszt = koszTextBox.Text;
+                // string samID = samochodyComboBox.Text;
+                // string pracID = pracIDTextBox.Text;
+                // string klientID = klientIDTextBox.Text;
+                // string datawyp = dataWypozyczeniaDatePicker.Text;
+                // string datazwr = dataZwrotuDatePicker.Text;
+                // insert into  wypozyczenia values(1, 1, 1, '2018-3-25', '2018-3-28', 1200)          
 
-                // insert into  wypozyczenia values(1, 1, 1, '2018-3-25', '2018-3-28', 1200)
+                string path;
+                string trimmedPath;
 
-                inquiry = "insert into wypozyczenia values(" + samID + ", " + pracID + ", " + klientID + ", '" + datawyp + "', '" + datazwr + "', " + koszt + ")";
+                path = samochodyComboBox.Text;                             // trimowanie scieżek  z combobox 
+                trimmedPath = Utility.TrimPath(path);
 
-                DataShow(inquiry, wypozyczeniGrid);
+                string samID = trimmedPath;
 
-                refreshAllTAbles();
+                path = pracownicyComboBox.Text;
+                trimmedPath = Utility.TrimPath(path);
+
+                string pracID = trimmedPath;
+
+                path = klienciComboBox.Text;
+                trimmedPath = Utility.TrimPath(path);
+
+                string klientID = trimmedPath;
+
+                string koszt = koszTextBox.Text;                              // koszt z pola tekstowego koszTextBox
+
+
+                if((!string.IsNullOrEmpty(samID)) && (!string.IsNullOrEmpty(pracID)) && (!string.IsNullOrEmpty(klientID)) && (!string.IsNullOrEmpty(koszt)))
+                {
+                    inquiry = "insert into wypozyczenia values(" + samID + ", " + pracID + ", " + klientID + ", '" + datawyp + "', '" + datazwr + "', " + koszt + ")";
+
+                    DataShow(inquiry, wypozyczeniGrid);
+
+                    refreshAllTAbles();
+
+                    MessageBox.Show("Dodano do bazy");
+                }
+                else
+                {
+                    MessageBox.Show("Pola nie zostały wypełnione");
+                }
+
+              
             }
         }
 
@@ -399,7 +423,6 @@ namespace Baza
         public void adminButtons()                              // funkcja dodaje przyciski do listy użytkownika
         {
             adminButtonsList = new List<Button>();              // utworzenie nowej listy 
-
 
             adminButtonsList.Add(Start);                        // dodawanie przyciskó do listy
             adminButtonsList.Add(addClient);

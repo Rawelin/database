@@ -45,13 +45,14 @@
                         <Grid Margin="10" Height="340">
 
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="450"/>
+                                <ColumnDefinition Width="76.5"/>
+                                <ColumnDefinition Width="373.5"/>
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
 
-                            <DataGrid Grid.Column="0" Name="klienciGrid" AutoGenerateColumns="True" SelectionChanged="grid_SelectionChanged" />
+                            <DataGrid Grid.Column="0" Name="klienciGrid" AutoGenerateColumns="True" SelectionChanged="grid_SelectionChanged" Grid.ColumnSpan="2" />
 
-                            <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10 0 0 0">
+                            <StackPanel Grid.Column="2" Orientation="Vertical" Margin="10 0 0 0">
                                 <TextBlock>Imię:</TextBlock>
                                 <TextBox x:Name="nameTextBoxC" MaxLength="20"/>
                                 <TextBlock>Nazwisko:</TextBlock>
@@ -72,7 +73,7 @@
                         <Grid Margin="10" Height="340">
 
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="450"/>
+                                <ColumnDefinition Width="420"/>
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
 
@@ -216,7 +217,7 @@
                 </StackPanel>
             </Label>
         </StackPanel>
-        
+
 
     </StackPanel>
 </Window>

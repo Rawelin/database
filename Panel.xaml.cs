@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Xml.Serialization;
 
 namespace Baza
@@ -10,11 +13,16 @@ namespace Baza
    
     public partial class Panel : Window
     {
-        public List<User> usersList;                                 // lista użytkowników
-        public List<User> adminList;                                 // lista administratorów
+        private SqlConnection connection;                             // ścieżka do bazy
+        private List<User> usersList;                                 // lista użytkowników
+        private List<User> adminList;                                 // lista administratorów
+        private DataRowView row;
+        private String id = null;
+        private int selectedIndex;
 
-        public Panel()
+        public Panel(SqlConnection connection)
         {
+            this.connection = connection;
             InitializeComponent();
             Initialize();
         }
@@ -23,7 +31,7 @@ namespace Baza
         {
             for(int i = 0; i < adminList.Count(); i++)
             {
-                if (this.loginAdminTextBox.Text.Equals(adminList[i].Login) && passwordAdminBox.Password.ToString().Equals(adminList[i].Password))  // walidacja loginu i hasła
+                if (this.loginAdminTextBox.Text.Equals(adminList[i].Name) && passwordAdminBox.Password.ToString().Equals(adminList[i].Password))  // walidacja loginu i hasła
                 {
                     changePasswordButton.IsEnabled = true;                      // aktywuje przycisk dodaj
                     removeUserButton.IsEnabled = true;                          // aktywuje przycisk usuń
@@ -37,69 +45,62 @@ namespace Baza
             }
 
             loginAdminTextBox.Text = "";
-            passwordAdminBox.Password = "";
-
-          
+            passwordAdminBox.Password = "";  
         }
 
-        private void addUser_Click(object sender, RoutedEventArgs e)            // metoda dla przycisku addUser
+        private void AddUser_Click(object sender, RoutedEventArgs e)            // metoda dla przycisku addUser
         {
-            string login = loginTextBox.Text;                                   // zapis do zmiennych z pól tekstowych i password
+            string name = nameTextBox.Text;                                     // zapis do zmiennych z pól tekstowych i password
+            string surname =surnameTextBox.Text;
             string password = passwordBox.Password.ToString();
             string repeatPassword = repeatPasswordBox.Password.ToString();
-            
+            string inquiry;
+
             if (password.Equals(repeatPassword))                                 // walidacja hasła
             {
                 errorMessageLabel.Content = "Hasło poprawne";
 
-                User user = new User(login, password);                           // tworzy nowego użytkownika
+                inquiry = "insert into pracownicy values('" + name + "', '" + surname + "')";
+                DataShow(inquiry, pracownicyGrid);
+
+                User user = new User(name, surname, password);                   // tworzy nowego użytkownika
                 usersList.Add(user);                                             // dodanie uzytkownika do listy
 
-                Serialization.SaveUserListToFile(usersList, @"user.xml");                     // zapisuje listę użytkowników do pliku
+                Serialization.SaveUserListToFile(usersList, @"user.xml");        // zapisuje listę użytkowników do pliku
 
-
-                MessageBox.Show("Dodano Użytkownika");
-
-                loginTextBox.Text = "";                                           // Czyszczenie pól 
+                nameTextBox.Text = "";                                           // Czyszczenie pól 
+                surnameTextBox.Text = "";
                 passwordBox.Password = "";
                 repeatPasswordBox.Password = "";
 
-                UsersListView.Items.Clear();                                      // Czyszczenie listy widoku
-
-                AddUserToUsersView();                                             // odświeżenie widoku
-
+                inquiry = "Select * from pracownicy";                             // odświeżenie widoku pracownicy po dodaniu rekordu
+                DataShow(inquiry, pracownicyGrid);                                // odświeżenie widoku
             }
             else
             {
                 errorMessageLabel.Content = "Hasło nie jest poprawne";
             }
         }
-     
-        private void AddUserToUsersView()                                        // metoda odświeżająca listę
-        { 
-            UsersListView.Items.Clear();                                         // czyści listę
 
-            for (int i = 0; i < usersList.Count(); i++)
-            {
-                UsersListView.Items.Add(usersList[i].Login);                     // dodaje użytkowników z listy użytkowników do listy w widoku
-            } 
-        }
-
-        private void closePanel_Click(object sender, RoutedEventArgs e)          // funkcja zamykająca okno Panel
+        private void closePanel_Click(object sender, RoutedEventArgs e)                     // funkcja zamykająca okno Panel
         {
             this.Close();
+            connection.Close();
         }
 
-        private void RemoveUser_Click(object sender, RoutedEventArgs e)          // metoda do usuwania użytkownika z listy 
+        private void RemoveUser_Click(object sender, RoutedEventArgs e)                     // metoda do usuwania użytkownika z listy 
         {
-            int selectedIndex = UsersListView.SelectedIndex;                     // pobiera index wciśnięty na liście w widoku
+            string inquiry = "delete from pracownicy where pracID=" + id + "";              // usunięcie pracownika o podanym id
 
-            if (selectedIndex >= 0)
-                usersList.RemoveAt(selectedIndex);                                   // usuwa z listy użytkowników użytkownika pod podanym indeksem
+            DataShow(inquiry, pracownicyGrid);
 
-            AddUserToUsersView();                                                // odświeża listę w widoku
+            if(usersList.Count > 0)
+                usersList.RemoveAt(selectedIndex + 1);                                      // usuwa z listy użytkowników użytkownika pod podanym indekse     
 
-            Serialization.SaveUserListToFile(usersList, @"user.xml");                         // zapisuje listę użytkowników do pliku
+            Serialization.SaveUserListToFile(usersList, @"user.xml");                       // zapisuje listę użytkowników do pliku
+
+            inquiry = "Select * from pracownicy";                                           // odświeżenie widoku pracownicy po dodaniu rekordu
+            DataShow(inquiry, pracownicyGrid);                                             
         }
 
         private void DaneAdmin_Click(object sender, RoutedEventArgs e)
@@ -121,10 +122,10 @@ namespace Baza
             {
                 errorMessageLabel.Content = "Hasło poprawne";
 
-                User user = new User(adminLogin, adminPassword);                           // tworzy nowego użytkownika
-                adminList.Add(user);                                             // dodanie uzytkownika do listy
+                User user = new User(adminLogin, adminLogin, adminPassword);               // tworzy nowego użytkownika
+                adminList.Add(user);                                                       // dodanie uzytkownika do listy
 
-                Serialization.SaveUserListToFile(adminList, @"admin.xml");                     // zapisuje listę użytkowników do pliku
+                Serialization.SaveUserListToFile(adminList, @"admin.xml");                 // zapisuje listę użytkowników do pliku
 
                 MessageBox.Show("Zmieniono dane administratora");
             }
@@ -139,7 +140,8 @@ namespace Baza
             adminList = new List<User>();
 
             User admin = new User();
-            admin.Login = "Admin";
+            admin.Name = "Admin";
+            admin.Surname = "Admin";
             admin.Password = "Admin";
 
             adminList.Add(admin);
@@ -158,9 +160,45 @@ namespace Baza
 
             usersList = Serialization.LoadUserFromFile(@"user.xml");           // funkcja wgrywająca użytkowników do listy z pliku
             adminList = Serialization.LoadUserFromFile(@"admin.xml");          // funkcja wgrywająca administratorów do listy z pliku
-            AddUserToUsersView();
 
-            CreateFirstAdmin();
+            string inquiry = "Select * from pracownicy";                       // odświeżenie widoku pracownicy po dodaniu rekordu
+            DataShow(inquiry, pracownicyGrid);
+
+           // CreateFirstAdmin();
+        }
+
+        public void DataShow(string inquiry, DataGrid dataGrid)      // metoda do dodawania pracowników do bazy
+        {                                                            // przyjmuje 2 parametry (zapytanie, siatka do wyświetlania danych)
+            try
+            {
+                SqlCommand command = new SqlCommand();               // tworzy nowy rozkaz SQL
+
+                command.CommandText = inquiry;                       // wczytuje zapytanie SQL
+                command.Connection = connection;                     // ścieżka do bazy 
+
+                SqlDataAdapter da = new SqlDataAdapter(command);     // pobiera zapytanie do adaptera
+                DataTable dt = new DataTable("Car Rent");            // tworzy nową tabelę
+                da.Fill(dt);                                         // pobiera tabelę do adaptera
+
+                dataGrid.ItemsSource = dt.DefaultView;               // wyświetla dane na gridzie z tabeli dt
+            }
+            catch (Exception ex)                                     // wyłapuje wyjątki 
+            {
+                MessageBox.Show("Komunikat diagnostyczny do odczytywania błędów", ex.Message);    // wyświetla messagebox na ekran
+            }
+        }
+
+        private void Grid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            selectedIndex = pracownicyGrid.SelectedIndex;
+            errorMessageLabel.Content = selectedIndex.ToString();
+
+            row = pracownicyGrid.SelectedItem as DataRowView;
+            if (row != null)
+            {
+                id = row.Row.ItemArray[0].ToString();
+            }
         }
     }
+   
 }

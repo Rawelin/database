@@ -23,7 +23,7 @@ namespace Baza
 
             XmlSerializer serializer = new XmlSerializer(typeof(List<User>));              // deserializacja
 
-            using (FileStream fs2 = File.OpenRead(usersPath))                            // odczyt z pliku
+            using (FileStream fs2 = File.OpenRead(usersPath))                              // odczyt z pliku
             {
                 return usersList = (List<User>)serializer.Deserialize(fs2);                 // wczytanie użytkowników z pliku do listy
             }

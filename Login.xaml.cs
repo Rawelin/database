@@ -41,21 +41,21 @@ namespace Baza
 
             for (int i = 0; i < usersList.Count; i++)                      // sprawdza w pętli czy jakiś login i hasło pasują do zapisanych w pliku
             {
-                if (this.loginTextBox.Text.Equals(usersList[i].Login) && passwordBox.Password.Equals(usersList[i].Password))   // walidacja loginu i hasła dla użytkownika
+                if (this.loginTextBox.Text.Equals(usersList[i].Name) && passwordBox.Password.Equals(usersList[i].Password))   // walidacja loginu i hasła dla użytkownika
                 {
                     this.Close();                                           // zamyka okno Login
 
                     mainWindow.StartConnection();                           // aktywuje funkcję z MainWindow
                     mainWindow.userButtonsEnable();
                     mainWindow.loginDisable();
-                    mainWindow.Status.Content = "Połączony z bazą jako użytkownik " + usersList[i].Login;   // aktualizuje etykietę napisem
+                    mainWindow.Status.Content = "Połączony z bazą jako użytkownik " + usersList[i].Name + " " + usersList[i].Surname;   // aktualizuje etykietę napisem
                 }
               
             }
 
             for (int i = 0; i < adminList.Count; i++)                      // sprawdza w pętli czy jakiś login i hasło pasują do zapisanych w pliku 
             {
-                if (this.loginTextBox.Text.Equals(adminList[i].Login) && passwordBox.Password.ToString().Equals(adminList[i].Password)) // walidacja loginu i hasła dla administratora
+                if (this.loginTextBox.Text.Equals(adminList[i].Name) && passwordBox.Password.ToString().Equals(adminList[i].Password)) // walidacja loginu i hasła dla administratora
                 {
                     this.Close();                                           // zamyka okno Login
 

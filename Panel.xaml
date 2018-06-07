@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Baza"
         mc:Ignorable="d"
         ResizeMode="NoResize"
-        Title="Panel Administratora" Height="380" Width="600">
+        Title="Panel Administratora" Height="420" Width="600">
 
     <StackPanel>
         <Grid>
@@ -20,51 +20,52 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="1" Margin="0 50 0 0">
-                <Label Content="Login Admin"></Label>
-                <Label Content="Hasło Admin"></Label>
-                <Label Content="Powtórz Hasło"></Label>
-                <Button x:Name="daneAdminButton" Click="DaneAdmin_Click" Margin="0 11 1 0">Dane Admin</Button>
+                <Label Content="Login Admin"/>
+                <Label Content="Hasło Admin"/>
+                <Label Content="Powtórz Hasło"/>
+                <Button x:Name="daneAdminButton" Click="DaneAdmin_Click" Margin="0 11 1 0" Content="Dane Admin"/>
             </StackPanel>
 
             <StackPanel  Grid.Column="2" Margin="0 50 0 0">
                 <TextBox x:Name="loginAdminTextBox" Margin="0 2 0 0" />
                 <PasswordBox x:Name="passwordAdminBox" Margin="0 5 0 0"/>
                 <PasswordBox x:Name="repeatPasswordAdminBox" Margin="0 5 0 0"/>
-                <Button x:Name="adminLoginButton" Margin="1 15 0 0" Click="AdminLaogin_Click" >Login</Button>
+                <Button x:Name="adminLoginButton" Margin="1 15 0 0" Click="AdminLaogin_Click" Content="Login" />
             </StackPanel>
 
             <StackPanel Grid.Column="1" Margin="0 180 0 0" >
-                <Label>Login User</Label>
-                <Label>Hasło User</Label>
-                <Label>Powtórz Hasło</Label>
-                <Button x:Name="closePanel" Margin="0 11 1 0" Click="closePanel_Click">Zamknij</Button>
+                <Label Content="Imię"/>
+                <Label Content="Nazwisko"/>
+                <Label Content="Hasło User"/>
+                <Label Content="Powtórz Hasło"/>
+                <Button x:Name="closePanel" Margin="0 9 1 0" Click="closePanel_Click" Content="Zamknij"/>
 
             </StackPanel>
 
             <StackPanel Grid.Column="2" Margin="0 180 0 0">
-                <TextBox x:Name="loginTextBox" Margin="0 2 0 0" />
+                <TextBox x:Name="nameTextBox" Margin="0 2 0 0" />
+                <TextBox x:Name="surnameTextBox" Margin="0 2 0 0" />
                 <PasswordBox x:Name="passwordBox" Margin="0 5 0 0"/>
                 <PasswordBox x:Name="repeatPasswordBox" Margin="0 5 0 0" />
-                <Button x:Name="changePasswordButton" Margin="1 15 0 0" Click="addUser_Click">Dodaj</Button>
+                <Button x:Name="changePasswordButton" Margin="1 15 0 0" Click="AddUser_Click" Content="Dodaj"/>
             </StackPanel>
 
-            <StackPanel Grid.Column="4" Margin="10 22 10 10" Height="200">
-                <ListView  x:Name="UsersListView" Width="260" Height="200">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Header="Użytkownicy" Width="250"/>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
+            <StackPanel Grid.Column="4" Margin="10 6 10 10" Height="224">
+                <Grid Width="260" Height="224">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="131*"/>
+                        <RowDefinition Height="93*"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid Grid.Column="0" Name="pracownicyGrid" AutoGenerateColumns="True" SelectionChanged="Grid_SelectionChanged" Margin="0,0,0,0" Grid.RowSpan="2"  />
+                </Grid>
+
             </StackPanel>
-            <Grid Grid.Column="4" Margin="0 270 160 0" Width="100">
-                <Button x:Name="removeUserButton" Click="RemoveUser_Click">Usuń</Button>
-                <Button x:Name="confirChanges" Click="ConfirmChanges_Click" Height="22" VerticalAlignment="Top" Margin="160,0,-160,0">Zapisz</Button>
+            <Grid Grid.Column="4" Margin="0 290 160 0" Width="100">
+                <Button x:Name="removeUserButton" Click="RemoveUser_Click" Margin="0,3,0,19" Height="22" Content="Usuń"/>
+                <Button x:Name="confirChanges" Click="ConfirmChanges_Click" Height="22" VerticalAlignment="Top" Margin="160,3,-160,0" Content="Zapisz"/>
             </Grid>
-            
-            
         </Grid>
-        <Label x:Name="errorMessageLabel" Margin="50 10 50 0"></Label>
+        <Label x:Name="errorMessageLabel" Margin="39,10,61,0" Height="26" Content=""/>
     </StackPanel>
-   
+
 </Window>

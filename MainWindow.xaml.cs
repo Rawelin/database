@@ -74,7 +74,6 @@ namespace Baza
         private void Login_Click(object sender, RoutedEventArgs e)           // przycisk login w menu Plik
         {
             Login login = new Login(this);                                   //  Tworzenie obiektu klasy Login i pobranie głownego okna jako parametru
-           // login.DataContext = this;
             login.ShowDialog();                                              //  Wyświetlenie formularza logowania 
         }
         private void Logout_Click(object sender, RoutedEventArgs e)
@@ -85,9 +84,11 @@ namespace Baza
         }
 
         private void Panel_Click(object sender, RoutedEventArgs e)            // przycisk panel administratora w menu Opcje
-        {
-            Panel panel = new Panel();                                        // tworzy nowe okno klasy Panel
-            panel.ShowDialog();                                               // otwiera okno Panel                                    
+        {    
+            StartConnection();
+
+            Panel panel = new Panel(connection);                              // tworzy nowe okno klasy Panel i pobiera aktualne połączenie z bazą
+            panel.ShowDialog();                                               // otwiera okno Panel   
         }
 
         private void add_Click(object sender, RoutedEventArgs e)              // wspolna metoda dla przycisków dodających 
@@ -374,7 +375,7 @@ namespace Baza
             inquiry = "Select * from samochody";                              // odświeżenie widoku samochody po dodaniu rekordu
             DataShow(inquiry, samochodyGrid);
 
-            inquiry = "select wypozyczenia.wypID, klienci.imie, klienci.nazwisko, samochody.marka, samochody.model, pracownicy.pracID, pracownicy.imie as imie, pracownicy.nazwisko as nazwisko, wypozyczenia.datawyp, wypozyczenia.datazwr, wypozyczenia.koszt " +
+            inquiry = "select wypozyczenia.wypID, klienci.imie, klienci.nazwisko, samochody.marka, samochody.model, pracownicy.pracID, pracownicy.imie as imiePrac, pracownicy.nazwisko as nazwiskoPrac, wypozyczenia.datawyp, wypozyczenia.datazwr, wypozyczenia.koszt " +
                 "from klienci, samochody, wypozyczenia, pracownicy " +
                 "where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID and wypozyczenia.pracID = pracownicy.pracID";
            // inquiry = "select wypozyczenia.wypID, klienci.klientID, pracownicy.pracID, samochody.marka, samochody.model,  wypozyczenia.datawyp, wypozyczenia.datazwr, wypozyczenia.koszt from klienci, samochody, wypozyczenia, pracownicy where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID and wypozyczenia.pracID = pracownicy.pracID ";

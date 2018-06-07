@@ -16,31 +16,29 @@ namespace Baza
         public Panel()
         {
             InitializeComponent();
-            changePasswordButton.IsEnabled = false;                  // deaktywuje przycisk dodaj
-            removeUserButton.IsEnabled = false;                      // deaktywuje przycisk usuń
-            hasloAdminButton.IsEnabled = false;                      // deaktywuje przycisk hasło admin
-
-            usersList = Serialization.LoadUserFromFile(@"user.xml");           // funkcja wgrywająca użytkowników do listy z pliku
-            adminList = Serialization.LoadUserFromFile(@"admin.xml");          // funkcja wgrywająca administratorów do listy z pliku
-            addUserToUsersView();
-
-           // createFirstAdmin();
+            Initialize();
         }
 
-        private void adminLaogin_Click(object sender, RoutedEventArgs e)
+        private void AdminLaogin_Click(object sender, RoutedEventArgs e)
         {
             for(int i = 0; i < adminList.Count(); i++)
             {
                 if (this.loginAdminTextBox.Text.Equals(adminList[i].Login) && passwordAdminBox.Password.ToString().Equals(adminList[i].Password))  // walidacja loginu i hasła
                 {
-                    changePasswordButton.IsEnabled = true;               // aktywuje przycisk dodaj
-                    removeUserButton.IsEnabled = true;                   // aktywuje przycisk usuń
-                    hasloAdminButton.IsEnabled = true;                   // aktywuje przycisk hasło admin
-                    errorMessageLabel.Content = "";                      // czyści etykiete errorMessageLabel
+                    changePasswordButton.IsEnabled = true;                      // aktywuje przycisk dodaj
+                    removeUserButton.IsEnabled = true;                          // aktywuje przycisk usuń
+                    daneAdminButton.IsEnabled = true;                           // aktywuje przycisk hasło admin
+                    errorMessageLabel.Content = "";                             // czyści etykiete errorMessageLabel
+                }
+                else
+                {
+                    errorMessageLabel.Content = "Podano zły login lub hasło";    // wysyła wiadomość do errorMessageLabel
                 }
             }
-          
-            errorMessageLabel.Content = "Podano zły login lub hasło";    // wysyła wiadomość do errorMessageLabel
+
+            loginAdminTextBox.Text = "";
+            passwordAdminBox.Password = "";
+
           
         }
 
@@ -50,8 +48,6 @@ namespace Baza
             string password = passwordBox.Password.ToString();
             string repeatPassword = repeatPasswordBox.Password.ToString();
             
-            //  errorMessageLabel.Content = login + " " + password + " " + repeatPassword;
-
             if (password.Equals(repeatPassword))                                 // walidacja hasła
             {
                 errorMessageLabel.Content = "Hasło poprawne";
@@ -70,7 +66,7 @@ namespace Baza
 
                 UsersListView.Items.Clear();                                      // Czyszczenie listy widoku
 
-                addUserToUsersView();                                             // odświeżenie widoku
+                AddUserToUsersView();                                             // odświeżenie widoku
 
             }
             else
@@ -79,7 +75,7 @@ namespace Baza
             }
         }
      
-        private void addUserToUsersView()                                        // metoda odświeżająca listę
+        private void AddUserToUsersView()                                        // metoda odświeżająca listę
         { 
             UsersListView.Items.Clear();                                         // czyści listę
 
@@ -94,36 +90,52 @@ namespace Baza
             this.Close();
         }
 
-        private void removeUser_Click(object sender, RoutedEventArgs e)          // metoda do usuwania użytkownika z listy 
+        private void RemoveUser_Click(object sender, RoutedEventArgs e)          // metoda do usuwania użytkownika z listy 
         {
             int selectedIndex = UsersListView.SelectedIndex;                     // pobiera index wciśnięty na liście w widoku
 
             if (selectedIndex >= 0)
                 usersList.RemoveAt(selectedIndex);                                   // usuwa z listy użytkowników użytkownika pod podanym indeksem
 
-            addUserToUsersView();                                                // odświeża listę w widoku
+            AddUserToUsersView();                                                // odświeża listę w widoku
 
             Serialization.SaveUserListToFile(usersList, @"user.xml");                         // zapisuje listę użytkowników do pliku
         }
 
-        private void saveUserListToFile()                                        // metoda zapisująca lisę użytkowniko do pliku
+        private void DaneAdmin_Click(object sender, RoutedEventArgs e)
         {
+            errorMessageLabel.Content = "Wprowadź nnowe dane administratora";
+            loginAdminTextBox.Focus();                                            // ustawia kursor na pole loginAdminTextBox
+            repeatPasswordAdminBox.IsEnabled = true;                              // uaktywnia przycisk repeatPasswordAdminBox   
+            confirChanges.IsEnabled = true;                                       // uaktywnia przycisk confirmChanges
+        }
+        private void ConfirmChanges_Click(object sender, RoutedEventArgs e)
+        {
+            adminList = new List<User>();
 
-            using (Stream fs = new FileStream(@"user.xml", FileMode.Create, FileAccess.Write, FileShare.None))   // zapis do pliku
+            string adminLogin = loginAdminTextBox.Text;
+            string adminPassword = passwordAdminBox.Password.ToString();
+            string repeatPasswprd = repeatPasswordAdminBox.Password.ToString();
+
+            if(adminPassword.Equals(repeatPasswprd))
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(List<User>));
-                serializer.Serialize(fs, usersList);
+                errorMessageLabel.Content = "Hasło poprawne";
+
+                User user = new User(adminLogin, adminPassword);                           // tworzy nowego użytkownika
+                adminList.Add(user);                                             // dodanie uzytkownika do listy
+
+                Serialization.SaveUserListToFile(adminList, @"admin.xml");                     // zapisuje listę użytkowników do pliku
+
+                MessageBox.Show("Zmieniono dane administratora");
+            }
+            else
+            {
+                errorMessageLabel.Content = "Hasło nie jest poprawne";
             }
         }
 
-        private void hasloAdmin_Click(object sender, RoutedEventArgs e)
+        private void CreateFirstAdmin()                                            // tworzy lub resetuje login i hasło administratora
         {
-
-        }
-
-        private void createFirstAdmin()                                            // tworzy lub resetuje login i hasło administratora
-        {
-
             adminList = new List<User>();
 
             User admin = new User();
@@ -133,6 +145,22 @@ namespace Baza
             adminList.Add(admin);
 
             Serialization.SaveUserListToFile(adminList, @"admin.xml");
+        }
+        
+        private void Initialize()
+        {
+            changePasswordButton.IsEnabled = false;                           // deaktywuje przycisk dodaj
+            removeUserButton.IsEnabled = false;                               // deaktywuje przycisk usuń
+            daneAdminButton.IsEnabled = false;                                // deaktywuje przycisk hasło admin
+            repeatPasswordAdminBox.IsEnabled = false;                         // deaktywuje pole repeatpasswordAdminBox
+            confirChanges.IsEnabled = false;                                  // deaktywuje przycisk confirChanges
+            daneAdminButton.Focus();                                          // ustawia kursror w polu daneAdminButton
+
+            usersList = Serialization.LoadUserFromFile(@"user.xml");           // funkcja wgrywająca użytkowników do listy z pliku
+            adminList = Serialization.LoadUserFromFile(@"admin.xml");          // funkcja wgrywająca administratorów do listy z pliku
+            AddUserToUsersView();
+
+            CreateFirstAdmin();
         }
     }
 }

@@ -30,9 +30,9 @@ namespace Baza
         public Login(MainWindow window)                                   // konstruktor pobierający MainWindow
         {
            InitializeComponent();
-           mainWindow = window;                                           // inicjalizacja mainWindow obiektem pobranym przez konstruktor
-           usersList = Serialization.LoadUserFromFile(@"user.xml");       // funkcja wgrywająca użytkowników do listy z pliku
-           adminList = Serialization.LoadUserFromFile(@"admin.xml");      // funkcja wgrywająca administratorów do listy z pliku
+           Initailize();                                                   // inicjalizuje pola 
+           mainWindow = window;                                            // inicjalizuje obiekt mainWindow
+
         }
 
 
@@ -75,6 +75,13 @@ namespace Baza
         {
             MessageBox.Show("Nie połączono z bazą danych");             // wyświetla messagebox na ekran
             this.Close();                                               // zamyka okno Login
+        }
+        private void Initailize()
+        {
+                                                      // inicjalizacja mainWindow obiektem pobranym przez konstruktor
+            usersList = Serialization.LoadUserFromFile(@"user.xml");       // funkcja wgrywająca użytkowników do listy z pliku
+            adminList = Serialization.LoadUserFromFile(@"admin.xml");      // funkcja wgrywająca administratorów do listy z pliku
+            loginTextBox.Focus();
         }
     }
 }

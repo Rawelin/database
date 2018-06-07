@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Baza"
         mc:Ignorable="d"
         ResizeMode="NoResize"
-        Title="Panel Administratora" Height="350" Width="600">
+        Title="Panel Administratora" Height="380" Width="600">
 
     <StackPanel>
         <Grid>
@@ -20,34 +20,36 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="1" Margin="0 50 0 0">
-                <Label>Login Admin</Label>
-                <Label>Hasło Admin</Label>
-                <Button x:Name="hasloAdminButton" Click="hasloAdmin_Click" Margin="0 12 1 0">Hasło Admin</Button>
+                <Label Content="Login Admin"></Label>
+                <Label Content="Hasło Admin"></Label>
+                <Label Content="Powtórz Hasło"></Label>
+                <Button x:Name="daneAdminButton" Click="DaneAdmin_Click" Margin="0 11 1 0">Dane Admin</Button>
             </StackPanel>
 
             <StackPanel  Grid.Column="2" Margin="0 50 0 0">
                 <TextBox x:Name="loginAdminTextBox" Margin="0 2 0 0" />
                 <PasswordBox x:Name="passwordAdminBox" Margin="0 5 0 0"/>
-                <Button x:Name="adminLoginButton" Margin="1 15 0 0" Click="adminLaogin_Click" >Login</Button>
+                <PasswordBox x:Name="repeatPasswordAdminBox" Margin="0 5 0 0"/>
+                <Button x:Name="adminLoginButton" Margin="1 15 0 0" Click="AdminLaogin_Click" >Login</Button>
             </StackPanel>
 
-            <StackPanel Grid.Column="1" Margin="0 150 0 0" >
-                <Label>Login</Label>
-                <Label>Hasło</Label>
+            <StackPanel Grid.Column="1" Margin="0 180 0 0" >
+                <Label>Login User</Label>
+                <Label>Hasło User</Label>
                 <Label>Powtórz Hasło</Label>
                 <Button x:Name="closePanel" Margin="0 11 1 0" Click="closePanel_Click">Zamknij</Button>
 
             </StackPanel>
 
-            <StackPanel Grid.Column="2" Margin="0 150 0 0">
+            <StackPanel Grid.Column="2" Margin="0 180 0 0">
                 <TextBox x:Name="loginTextBox" Margin="0 2 0 0" />
                 <PasswordBox x:Name="passwordBox" Margin="0 5 0 0"/>
                 <PasswordBox x:Name="repeatPasswordBox" Margin="0 5 0 0" />
                 <Button x:Name="changePasswordButton" Margin="1 15 0 0" Click="addUser_Click">Dodaj</Button>
             </StackPanel>
 
-            <StackPanel Grid.Column="4" Margin="10 25 10 10" Height="170">
-                <ListView  x:Name="UsersListView" Width="260" Height="170">
+            <StackPanel Grid.Column="4" Margin="10 22 10 10" Height="200">
+                <ListView  x:Name="UsersListView" Width="260" Height="200">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Użytkownicy" Width="250"/>
@@ -55,9 +57,10 @@
                     </ListView.View>
                 </ListView>
             </StackPanel>
-            <StackPanel Grid.Column="4" Margin="0 240 160 0" Width="100">
-                <Button x:Name="removeUserButton" Click="removeUser_Click">Usuń</Button>
-            </StackPanel>
+            <Grid Grid.Column="4" Margin="0 270 160 0" Width="100">
+                <Button x:Name="removeUserButton" Click="RemoveUser_Click">Usuń</Button>
+                <Button x:Name="confirChanges" Click="ConfirmChanges_Click" Height="22" VerticalAlignment="Top" Margin="160,0,-160,0">Zapisz</Button>
+            </Grid>
             
             
         </Grid>

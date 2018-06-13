@@ -177,8 +177,9 @@
 
                             <StackPanel Grid.Column="1">
                                 <Button x:Name="topClients" Click="topClient_Click" Margin="10 0 0 0">Top Klienci</Button>
-                                <Button x:Name="topCars" Margin="10 0 0 0">Top Samochody</Button>
-                                <Button x:Name="topEmployee" Margin="10 0 0 0">Top Pracownicy</Button>
+                                <Button x:Name="topCars" Click="topCars_Click" Margin="10 0 0 0">Top Samochody</Button>
+                                <Button x:Name="topEmployee" Click="topEmployees_Click" Margin="10 0 0 0">Top Pracownicy</Button>
+                                <Button x:Name="print" Click="print_Click" Margin="10 0 0 0">Drukuj</Button>
                             </StackPanel>
 
                         </Grid>

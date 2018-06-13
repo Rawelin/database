@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Configuration;                       // for ConfigurationManger - add references in solution explorer
 using System.Data;                                // for DataTable
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace Baza
 {
@@ -323,11 +324,19 @@ namespace Baza
 
         private void topClient_Click(object sender, RoutedEventArgs e)
         {
-            // inquiry = "Select klienci.imie, klienci.nazwisko, samochody.marka, wypozyczenia.wypID from klienci, samochody, wypozyczenia where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
-            // inquiry = "Select klienci.imie, klienci.nazwisko, samochody.marka, wypozyczenia.wypID from klienci, samochody, wypozyczenia where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
-            // inquiry = "Select  klientID, klienci.imie, count(klientID) as 'Wypożyczenia' from wypozyczenia, klienci, samochody where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID group by KlientID";
-            // inquiry = "Select  klientID, klienci.imie, count(klientID) as 'Wypożyczenia' from wypozyczenia, klienci, where wypozyczenia.klientID = klienci.klientID group by KlientID";
-            inquiry = "Select  klientID, count(klientID) as 'Wypożyczenia' from wypozyczenia group by KlientID";
+            inquiry = "Select imie, nazwisko, count(wypozyczenia.klientID) as 'Wypożyczenia' from wypozyczenia, klienci where wypozyczenia.klientID = klienci.klientID group by imie, nazwisko;";
+            DataShow(inquiry, raportyGrid);
+        }
+
+        private void topCars_Click(object sender, RoutedEventArgs e)
+        {
+            inquiry = "Select marka, model, count(samochody.samID) as 'Wypożyczenia' from wypozyczenia, samochody where wypozyczenia.samID = samochody.samID group by marka, model;";
+            DataShow(inquiry, raportyGrid);
+        }
+
+        private void topEmployees_Click(object sender, RoutedEventArgs e)
+        {
+            inquiry = "Select imie, nazwisko, count(pracownicy.pracID) as 'Wypożyczenia' from wypozyczenia, pracownicy where wypozyczenia.pracID = pracownicy.pracID group by imie, nazwisko;";
             DataShow(inquiry, raportyGrid);
         }
 
@@ -398,6 +407,7 @@ namespace Baza
             userButtonsList.Add(topClients);
             userButtonsList.Add(topCars);
             userButtonsList.Add(topEmployee);
+            userButtonsList.Add(print);
         }
 
         public void adminButtons()                              // funkcja dodaje przyciski do listy użytkownika
@@ -419,6 +429,7 @@ namespace Baza
             adminButtonsList.Add(topClients);
             adminButtonsList.Add(topCars);
             adminButtonsList.Add(topEmployee);
+            adminButtonsList.Add(print);
 
             deleteEmployee.IsEnabled = false;
         }
@@ -466,6 +477,17 @@ namespace Baza
         {
             login.IsEnabled = false;
             logout.IsEnabled = true;
+        }
+
+        private void print_Click(object sender, RoutedEventArgs e)
+        {
+            PrintDialog printDialog = new PrintDialog();
+
+            if(printDialog.ShowDialog() == true)
+            {
+                printDialog.PrintVisual(raportyGrid, "Drukownie...");
+            }
+
         }
     }
 }

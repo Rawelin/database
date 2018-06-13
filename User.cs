@@ -21,7 +21,24 @@ namespace Baza
             this.surname = surname;
             this.password = password;
         }
-
+        public User(string id, string name, string surname, string password)
+        {
+            this.id = id;
+            this.name = name;
+            this.surname = surname;
+            this.password = password;
+        }
+        public string ID
+        {
+            get
+            {
+                return id;
+            }
+            set
+            {
+                this.id = value;
+            }
+        }
         public string Name
         {
             get
@@ -55,16 +72,6 @@ namespace Baza
                 this.password = value;
             }
         }
-        public string ID
-        {
-            get
-            {
-                return id;
-            }
-            set
-            {
-                this.id = value;
-            }
-        }
+       
     }
 }

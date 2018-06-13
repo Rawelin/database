@@ -2,17 +2,16 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Xml.Serialization;
+
 
 namespace Baza
 {
-   
     public partial class Panel : Window
     {
+        MainWindow mainWindow;
         private SqlConnection connection;                             // ścieżka do bazy
         private List<User> usersList;                                 // lista użytkowników
         private List<User> adminList;                                 // lista administratorów
@@ -20,8 +19,9 @@ namespace Baza
         private String id = null;
         private int selectedIndex;
 
-        public Panel(SqlConnection connection)
+        public Panel(MainWindow mainWindow, SqlConnection connection)
         {
+            this.mainWindow = mainWindow;
             this.connection = connection;
             InitializeComponent();
             Initialize();
@@ -63,18 +63,27 @@ namespace Baza
                 inquiry = "insert into pracownicy values('" + name + "', '" + surname + "')";
                 DataShow(inquiry, pracownicyGrid);
 
-                User user = new User(name, surname, password);                   // tworzy nowego użytkownika
-                usersList.Add(user);                                             // dodanie uzytkownika do listy
-
-                Serialization.SaveUserListToFile(usersList, @"user.xml");        // zapisuje listę użytkowników do pliku
-
-                nameTextBox.Text = "";                                           // Czyszczenie pól 
+                nameTextBox.Text = "";                                        // Czyszczenie pól 
                 surnameTextBox.Text = "";
                 passwordBox.Password = "";
                 repeatPasswordBox.Password = "";
 
-                inquiry = "Select * from pracownicy";                             // odświeżenie widoku pracownicy po dodaniu rekordu
-                DataShow(inquiry, pracownicyGrid);                                // odświeżenie widoku
+                inquiry = "Select * from pracownicy";                          // odświeżenie widoku pracownicy po dodaniu rekordu
+                DataShow(inquiry, pracownicyGrid);                             // odświeżenie widoku
+                DataShow(inquiry, mainWindow.pracownicyGrid);
+
+                int size = pracownicyGrid.Items.Count - 1;                      // ustalenie wielkości DataGrid
+                size = size - 1;
+                row = pracownicyGrid.Items.GetItemAt(size) as DataRowView;      // dostanie się do ostatniego rekordu DataGrid
+                id = row.Row.ItemArray[0].ToString();                           // odczytanie elementu z pierwszej komórki ostatniego rekokrdu DataGrid
+               // MessageBox.Show(id);
+
+                User user = new User(id, name, surname, password);               // tworzy nowego użytkownika
+                usersList.Add(user);                                             // dodanie uzytkownika do listy
+
+                // inquiry = "select MAX(pracID) from pracownicy";
+
+                Serialization.SaveUserListToFile(usersList, @"user.xml");        // zapisuje listę użytkowników do pliku
             }
             else
             {
@@ -91,12 +100,17 @@ namespace Baza
         private void RemoveUser_Click(object sender, RoutedEventArgs e)                     // metoda do usuwania użytkownika z listy 
         {
             string inquiry = "delete from pracownicy where pracID=" + id + "";              // usunięcie pracownika o podanym id
+            string inquiry2 = "delete from wypozyczenia where pracID=" + id + "";           // usunięcie wypożyczeń pracownika o podanym id
 
-            DataShow(inquiry, pracownicyGrid);
-
-            if(usersList.Count > 0)
-                usersList.RemoveAt(selectedIndex + 1);                                      // usuwa z listy użytkowników użytkownika pod podanym indekse     
-
+            selectedIndex = pracownicyGrid.SelectedIndex;                                   // pokazuje indeks na pracownicyGrid
+           
+            if (row != null)
+            {
+                DataShow(inquiry2, pracownicyGrid);
+                DataShow(inquiry, pracownicyGrid);
+                usersList.RemoveAt(selectedIndex);                                          // usuwa z listy użytkowników użytkownika pod podanym indekse     
+            }
+           
             Serialization.SaveUserListToFile(usersList, @"user.xml");                       // zapisuje listę użytkowników do pliku
 
             inquiry = "Select * from pracownicy";                                           // odświeżenie widoku pracownicy po dodaniu rekordu
@@ -105,10 +119,10 @@ namespace Baza
 
         private void DaneAdmin_Click(object sender, RoutedEventArgs e)
         {
-            errorMessageLabel.Content = "Wprowadź nnowe dane administratora";
-            loginAdminTextBox.Focus();                                            // ustawia kursor na pole loginAdminTextBox
-            repeatPasswordAdminBox.IsEnabled = true;                              // uaktywnia przycisk repeatPasswordAdminBox   
-            confirChanges.IsEnabled = true;                                       // uaktywnia przycisk confirmChanges
+            errorMessageLabel.Content = "Wprowadź nowe dane administratora";
+            loginAdminTextBox.Focus();                                                      // ustawia kursor na pole loginAdminTextBox
+            repeatPasswordAdminBox.IsEnabled = true;                                        // uaktywnia przycisk repeatPasswordAdminBox   
+            confirChanges.IsEnabled = true;                                                 // uaktywnia przycisk confirmChanges
         }
         private void ConfirmChanges_Click(object sender, RoutedEventArgs e)
         {
@@ -164,7 +178,7 @@ namespace Baza
             string inquiry = "Select * from pracownicy";                       // odświeżenie widoku pracownicy po dodaniu rekordu
             DataShow(inquiry, pracownicyGrid);
 
-           // CreateFirstAdmin();
+            // CreateFirstAdmin();
         }
 
         public void DataShow(string inquiry, DataGrid dataGrid)      // metoda do dodawania pracowników do bazy
@@ -190,10 +204,8 @@ namespace Baza
 
         private void Grid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            selectedIndex = pracownicyGrid.SelectedIndex;
-            errorMessageLabel.Content = selectedIndex.ToString();
-
             row = pracownicyGrid.SelectedItem as DataRowView;
+         
             if (row != null)
             {
                 id = row.Row.ItemArray[0].ToString();

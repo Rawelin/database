@@ -35,7 +35,7 @@ namespace Baza
         {
             try
             {
-                connection = new SqlConnection();                      // tworzy nowe polączenie SQL
+                connection = new SqlConnection();                                        // tworzy nowe polączenie SQL
                 connection.ConnectionString = ConfigurationManager.ConnectionStrings["wypozyczalnia"].ConnectionString;  // ścieżka do bazy zmajdująca się w App.config
                 connection.Open();                                                       // otwiera polączenie
 
@@ -45,11 +45,11 @@ namespace Baza
 
                 string inq1 = "select * from samochody";
                 string inq2 = "select * from klienci";
-                string inq3 = "select * from pracownicy";
+             //   string inq3 = "select * from pracownicy";
 
                 utility.addItemsToComboBox(inq1, samochodyComboBox);                    // dodawanie pól z bazy do combobox
                 utility.addItemsToComboBox(inq2, klienciComboBox);
-                utility.addItemsToComboBox(inq3, pracownicyComboBox);
+             //   utility.addItemsToComboBox(inq3, pracownicyComboBox);
             }
             catch (Exception ex)                                                         // wyłapuje wyjątki kiedy coś pójdzie nie tak
             {
@@ -85,9 +85,7 @@ namespace Baza
 
         private void Panel_Click(object sender, RoutedEventArgs e)            // przycisk panel administratora w menu Opcje
         {    
-            StartConnection();
-
-            Panel panel = new Panel(connection);                              // tworzy nowe okno klasy Panel i pobiera aktualne połączenie z bazą
+            Panel panel = new Panel(this, connection);                              // tworzy nowe okno klasy Panel i pobiera aktualne połączenie z bazą
             panel.ShowDialog();                                               // otwiera okno Panel   
         }
 
@@ -412,7 +410,7 @@ namespace Baza
             adminButtonsList.Add(deleteClient);
             adminButtonsList.Add(addEmployee);
             adminButtonsList.Add(editEmployee);
-            adminButtonsList.Add(deleteEmployee);
+          //  adminButtonsList.Add(deleteEmployee);
             adminButtonsList.Add(addCar);
             adminButtonsList.Add(editCar);
             adminButtonsList.Add(deleteCar);
@@ -421,6 +419,8 @@ namespace Baza
             adminButtonsList.Add(topClients);
             adminButtonsList.Add(topCars);
             adminButtonsList.Add(topEmployee);
+
+            deleteEmployee.IsEnabled = false;
         }
 
         public void userButtonsDisable()                                    // funkcja ustawiająca przyciski użytkownika  na disable
@@ -445,6 +445,7 @@ namespace Baza
             {
                 bt.IsEnabled = false;
             }
+            adminPanel.IsEnabled = false;
         }
 
         public void adminButtonsEnable()                                     // funkcja ustawiająca przyciski administratora na enable
@@ -453,6 +454,7 @@ namespace Baza
             {
                 bt.IsEnabled = true;
             }
+            adminPanel.IsEnabled = true; 
         }
         public void loginEnable()                                            // funkcja ustawiająca przycisk login w menu Plik na enable
         {

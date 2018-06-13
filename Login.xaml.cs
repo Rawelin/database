@@ -27,14 +27,12 @@ namespace Baza
         public List<User> usersList;                                      // lista użytkowników
         public List<User> adminList;
 
-        public Login(MainWindow window)                                   // konstruktor pobierający MainWindow
+        public Login(MainWindow window)                                   // konstruktor pobierający MainWindow 
         {
            InitializeComponent();
            Initailize();                                                   // inicjalizuje pola 
            mainWindow = window;                                            // inicjalizuje obiekt mainWindow
-
         }
-
 
         private void Login_Click(object sender, RoutedEventArgs e)         // metoda przycisku login 
         {
@@ -48,7 +46,11 @@ namespace Baza
                     mainWindow.StartConnection();                           // aktywuje funkcję z MainWindow
                     mainWindow.userButtonsEnable();
                     mainWindow.loginDisable();
-                    mainWindow.Status.Content = "Połączony z bazą jako użytkownik " + usersList[i].Name + " " + usersList[i].Surname;   // aktualizuje etykietę napisem
+                    mainWindow.Status.Content = "Połączony z bazą jako użytkownik: " + usersList[i].Name + " " + usersList[i].Surname + " ID: " + usersList[i].ID;   // aktualizuje etykietę napisem
+
+
+                    mainWindow.pracownicyComboBox.Items.Clear();
+                    mainWindow.pracownicyComboBox.Items.Add(usersList[i].ID);
                 }
               
             }

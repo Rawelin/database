@@ -31,7 +31,7 @@
                     </MenuItem>
                 </MenuItem>
                 <MenuItem Header="_Opcje">
-                    <MenuItem x:Name="Panel"  Header="_Panel Administratora"  InputGestureText="Alt+P" Click="Panel_Click">
+                    <MenuItem x:Name="adminPanel"  Header="_Panel Administratora"  InputGestureText="Alt+P" Click="Panel_Click">
 
                     </MenuItem>
                 </MenuItem>

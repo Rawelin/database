@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Baza"
         mc:Ignorable="d"
-        Title="Wypożyczalnia Samochodów" Height="490" Width="800"
+        Title="Wypożyczalnia Samochodów" Height="800" Width="1200"
         ResizeMode="NoResize"
          Icon="./Resources/base.png"
         WindowStyle="ThreeDBorderWindow">
@@ -38,19 +38,18 @@
             </Menu>
         </DockPanel>
         <Grid>
-            <TabControl Height="400">
+            <TabControl Height="710">
 
                 <TabItem Header="Klienci">
                     <StackPanel>
-                        <Grid Margin="10" Height="340">
+                        <Grid Margin="10" Height="665">
 
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="76.5"/>
-                                <ColumnDefinition Width="373.5"/>
+                                <ColumnDefinition Width="850"/>
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
 
-                            <DataGrid Grid.Column="0" Name="klienciGrid" AutoGenerateColumns="True" SelectionChanged="grid_SelectionChanged" Grid.ColumnSpan="2" />
+                            <DataGrid Grid.Column="0" Name="klienciGrid" AutoGenerateColumns="True" SelectionChanged="grid_SelectionChanged"/>
 
                             <StackPanel Grid.Column="2" Orientation="Vertical" Margin="10 0 0 0">
                                 <TextBlock>Imię:</TextBlock>
@@ -70,10 +69,10 @@
 
                 <TabItem Header="Pracownicy">
                     <StackPanel>
-                        <Grid Margin="10" Height="340">
+                        <Grid Margin="10" Height="665">
 
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="420"/>
+                                <ColumnDefinition Width="850"/>
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
 
@@ -94,10 +93,10 @@
 
                 <TabItem Header="Samochody">
                     <StackPanel>
-                        <Grid Margin="10" Height="340">
+                        <Grid Margin="10" Height="665">
 
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="450"/>
+                                <ColumnDefinition Width="850"/>
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
 
@@ -121,10 +120,10 @@
                 <TabItem Header="Wypozyczenia">
 
                     <StackPanel>
-                        <Grid Margin="10" Height="340">
+                        <Grid Margin="10" Height="665">
 
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="450"/>
+                                <ColumnDefinition Width="850"/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
@@ -143,8 +142,11 @@
                                 <DatePicker x:Name="dataZwrotuDatePicker" SelectedDateChanged="dataPicker_SelectionChanged"></DatePicker>
                                 <TextBlock>Koszt</TextBlock>
                                 <TextBox x:Name="koszTextBox" PreviewTextInput="NumberValidationTextBox" MaxLength="6" />
-                                <Button x:Name="addOrder" Click="add_Click" Margin="0 10 0 0">Zapisz</Button>
-                                <Button x:Name="deleteOrder" Click="delete_Click">Kasuj</Button>
+                                <Button x:Name="addOrder" Click="add_Click" Margin="0 2 0 0">Zapisz</Button>
+                                <Button x:Name="releaseOrder" Click="edit_Click" Margin="0 2 0 0">Zwolnij</Button>
+                                <Button x:Name="editOrder" Click="add_Click" Margin="0 2 0 0">Edytuj</Button>
+                                <Button x:Name="deleteOrder" Click="delete_Click" Margin="0 2 0 0">Kasuj</Button>
+                                <Button x:Name="printOrder" Click="print_Click" Margin="0 2 0 0">Drukuj</Button>
                             </StackPanel>
                         </Grid>
                     </StackPanel>
@@ -166,10 +168,10 @@
                             <TextBox Grid.Column="2" Name="inquiryTextBox"/>
                         </Grid>
 
-                        <Grid Margin="10" Height="295">
+                        <Grid Margin="10" Height="620">
 
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="450"/>
+                                <ColumnDefinition Width="850"/>
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
 
@@ -179,7 +181,7 @@
                                 <Button x:Name="topClients" Click="topClient_Click" Margin="10 0 0 0">Top Klienci</Button>
                                 <Button x:Name="topCars" Click="topCars_Click" Margin="10 0 0 0">Top Samochody</Button>
                                 <Button x:Name="topEmployee" Click="topEmployees_Click" Margin="10 0 0 0">Top Pracownicy</Button>
-                                <Button x:Name="print" Click="print_Click" Margin="10 0 0 0">Drukuj</Button>
+                                <Button x:Name="printRaport" Click="print_Click" Margin="10 0 0 0">Drukuj</Button>
                             </StackPanel>
 
                         </Grid>
@@ -190,7 +192,7 @@
 
                 <TabItem Header="Historia">
                     <StackPanel>
-                        <Grid Margin="10" Height="250">
+                        <Grid Margin="10" Height="625">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="146*"/>
                                 <ColumnDefinition Width="619*"/>
@@ -212,7 +214,7 @@
         <StackPanel Orientation="Horizontal">
             <Label>Status:</Label>
             <Label x:Name="Status" Content=" Niepołączony"/>
-            <Label x:Name="StatusPicture" Margin="590 3 0 0">
+            <Label x:Name="StatusPicture" Margin="990 3 0 0">
                 <StackPanel>
                     <Image x:Name="red" Source="./Resources/redCircle.png" Height="10" Width="10"/>
                 </StackPanel>

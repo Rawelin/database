@@ -15,6 +15,7 @@ namespace Baza
     {
         private String inquiry = null;
         private String id = null;
+        private String samID = null;
         private SqlConnection connection;
         private DataRowView row;
         private DateTime datawyp;
@@ -48,7 +49,7 @@ namespace Baza
                 string inq2 = "select * from klienci";
              //   string inq3 = "select * from pracownicy";
 
-                utility.addItemsToComboBox(inq1, samochodyComboBox);                    // dodawanie pól z bazy do combobox
+                utility.addItemsToComboBox(inq1, samochodyComboBox, 1);                    // dodawanie pól z bazy do combobox
                 utility.addItemsToComboBox(inq2, klienciComboBox);
              //   utility.addItemsToComboBox(inq3, pracownicyComboBox);
             }
@@ -120,8 +121,9 @@ namespace Baza
                 string brand = brandTextBoxS.Text;
                 string model = modelTextBoxS.Text;
                 string color = colorTextBoxS.Text;
+                string status = "false";
 
-                inquiry = "insert into samochody values('" + brand + "', '" + model + "', '" + color + "')";
+                inquiry = "insert into samochody values('" + brand + "', '" + model + "', '" + color + "', '" +status+ "')";
                 DataShow(inquiry, samochodyGrid);                              // dodanie rekordu
                 refreshAllTAbles();                                            // odświeża wszystkie widoki
             }
@@ -153,7 +155,10 @@ namespace Baza
                     inquiry = "insert into wypozyczenia values(" + samID + ", " + pracID + ", " + klientID + ", '" + datawyp + "', '" + datazwr + "', " + koszt + ")";
 
                     DataShow(inquiry, wypozyczeniGrid);
-                
+
+                    inquiry = "update samochody set zajety = 'true' where samID = " + samID + "";
+                    DataShow(inquiry, samochodyGrid);
+
                     refreshAllTAbles();
 
                     MessageBox.Show("Dodano do bazy");
@@ -219,6 +224,16 @@ namespace Baza
 
                 refreshAllTAbles();                                             // odświeża wszystkie widoki
             }
+            else if(sender.Equals(releaseOrder))
+            {
+                inquiry = "update samochody set zajety = 'false' where samID = " + samID + "";
+                DataShow(inquiry, wypozyczeniGrid);
+
+                string inq1 = "select * from samochody";
+                utility.addItemsToComboBox(inq1, samochodyComboBox, 1);         // odświeża combobox samochodyComboBox
+
+                refreshAllTAbles();                                             // odświeża wszystkie widoki
+            }
         }
 
         private void delete_Click(object sender, RoutedEventArgs e)            // wspolna metoda dla przycisków kasujących 
@@ -227,8 +242,10 @@ namespace Baza
             if (sender.Equals(deleteClient))
             {
                 inquiry = "delete from klienci where klientID=" + id + "";
+                string inquiry2 = "delete from wypozyczenia where klientID=" + id + "";
+                DataShow(inquiry2, klienciGrid);                                 // skasowanie rekordów klienta w wypożyczeniach
                 DataShow(inquiry, klienciGrid);                                  // skasownie rekordu
-
+               
                 refreshAllTAbles();                                              // odświeża wszystkie widoki
             }
             else if (sender.Equals(deleteEmployee))
@@ -311,14 +328,16 @@ namespace Baza
             else if (sender.Equals(wypozyczeniGrid))
             {
                 row = wypozyczeniGrid.SelectedItem as DataRowView;
-               // int noOfRows = wypozyczeniGrid.Items.Count;
 
                 if(row != null)
+                {
                     id = row.Row.ItemArray[0].ToString();
+                    samID = row.Row.ItemArray[3].ToString();
+                }        
             }
             else if (sender.Equals(historiaGrid))
             {
-
+               
             }
         }
 
@@ -382,7 +401,7 @@ namespace Baza
             inquiry = "Select * from samochody";                              // odświeżenie widoku samochody po dodaniu rekordu
             DataShow(inquiry, samochodyGrid);
 
-            inquiry = "select wypozyczenia.wypID, klienci.imie, klienci.nazwisko, samochody.marka, samochody.model, pracownicy.pracID, pracownicy.imie as imiePrac, pracownicy.nazwisko as nazwiskoPrac, wypozyczenia.datawyp, wypozyczenia.datazwr, wypozyczenia.koszt " +
+            inquiry = "select wypozyczenia.wypID, klienci.imie, klienci.nazwisko, samochody.samID, samochody.marka, samochody.model, samochody.zajety, pracownicy.pracID, pracownicy.imie as imiePrac, pracownicy.nazwisko as nazwiskoPrac, wypozyczenia.datawyp, wypozyczenia.datazwr, wypozyczenia.koszt " +
                 "from klienci, samochody, wypozyczenia, pracownicy " +
                 "where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID and wypozyczenia.pracID = pracownicy.pracID";
            // inquiry = "select wypozyczenia.wypID, klienci.klientID, pracownicy.pracID, samochody.marka, samochody.model,  wypozyczenia.datawyp, wypozyczenia.datazwr, wypozyczenia.koszt from klienci, samochody, wypozyczenia, pracownicy where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID and wypozyczenia.pracID = pracownicy.pracID ";
@@ -401,13 +420,13 @@ namespace Baza
 
             userButtonsList.Add(Start);                         // dodawanie przyciskó do listy
             userButtonsList.Add(addClient);
-            userButtonsList.Add(addEmployee);
-            userButtonsList.Add(addCar);
             userButtonsList.Add(addOrder);
             userButtonsList.Add(topClients);
             userButtonsList.Add(topCars);
             userButtonsList.Add(topEmployee);
-            userButtonsList.Add(print);
+            userButtonsList.Add(printOrder);
+            userButtonsList.Add(printRaport);
+            userButtonsList.Add(releaseOrder);
         }
 
         public void adminButtons()                              // funkcja dodaje przyciski do listy użytkownika
@@ -429,7 +448,10 @@ namespace Baza
             adminButtonsList.Add(topClients);
             adminButtonsList.Add(topCars);
             adminButtonsList.Add(topEmployee);
-            adminButtonsList.Add(print);
+            adminButtonsList.Add(printOrder);
+            adminButtonsList.Add(printRaport);
+            adminButtonsList.Add(releaseOrder);
+            adminButtonsList.Add(editOrder);
 
             deleteEmployee.IsEnabled = false;
         }
@@ -485,7 +507,14 @@ namespace Baza
 
             if(printDialog.ShowDialog() == true)
             {
-                printDialog.PrintVisual(raportyGrid, "Drukownie...");
+                if(sender.Equals(printRaport))
+                {
+                    printDialog.PrintVisual(raportyGrid, "Drukownie Raportów");
+                }
+                else if (sender.Equals(printOrder))
+                {
+                    printDialog.PrintVisual(wypozyczeniGrid, "Drukownie Zamówień");
+                }
             }
 
         }

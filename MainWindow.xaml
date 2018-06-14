@@ -45,11 +45,12 @@
                         <Grid Margin="10" Height="665">
 
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="850"/>
+                                <ColumnDefinition Width="229.5"/>
+                                <ColumnDefinition Width="620.5"/>
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
 
-                            <DataGrid Grid.Column="0" Name="klienciGrid" AutoGenerateColumns="True" SelectionChanged="grid_SelectionChanged"/>
+                            <DataGrid Grid.Column="0" Name="klienciGrid" AutoGenerateColumns="True" SelectionChanged="grid_SelectionChanged" Grid.ColumnSpan="2"/>
 
                             <StackPanel Grid.Column="2" Orientation="Vertical" Margin="10 0 0 0">
                                 <TextBlock>Imię:</TextBlock>
@@ -144,7 +145,7 @@
                                 <TextBox x:Name="koszTextBox" PreviewTextInput="NumberValidationTextBox" MaxLength="6" />
                                 <Button x:Name="addOrder" Click="add_Click" Margin="0 2 0 0">Zapisz</Button>
                                 <Button x:Name="releaseOrder" Click="edit_Click" Margin="0 2 0 0">Zwolnij</Button>
-                                <Button x:Name="editOrder" Click="add_Click" Margin="0 2 0 0">Edytuj</Button>
+                                <Button x:Name="editOrder" Click="edit_Click" Margin="0 2 0 0">Edytuj</Button>
                                 <Button x:Name="deleteOrder" Click="delete_Click" Margin="0 2 0 0">Kasuj</Button>
                                 <Button x:Name="printOrder" Click="print_Click" Margin="0 2 0 0">Drukuj</Button>
                             </StackPanel>

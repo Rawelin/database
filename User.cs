@@ -15,6 +15,12 @@ namespace Baza
 
         public User() { }
 
+        public User(string name, string surname)
+        {
+            this.name = name;
+            this.surname = surname;
+        }
+
         public User(string name, string surname, string password)
         {
             this.name = name;

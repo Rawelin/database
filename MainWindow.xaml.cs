@@ -16,6 +16,7 @@ namespace Baza
         private String inquiry = null;
         private String id = null;
         private String samID = null;
+        private int pracIndex;
         private SqlConnection connection;
         private DataRowView row;
         private DateTime datawyp;
@@ -87,7 +88,7 @@ namespace Baza
 
         private void Panel_Click(object sender, RoutedEventArgs e)            // przycisk panel administratora w menu Opcje
         {    
-            Panel panel = new Panel(this, connection);                              // tworzy nowe okno klasy Panel i pobiera aktualne połączenie z bazą
+            Panel panel = new Panel(this, connection);                        // tworzy nowe okno klasy Panel i pobiera aktualne połączenie z bazą
             panel.ShowDialog();                                               // otwiera okno Panel   
         }
 
@@ -159,6 +160,9 @@ namespace Baza
                     inquiry = "update samochody set zajety = 'true' where samID = " + samID + "";
                     DataShow(inquiry, samochodyGrid);
 
+                    string inq1 = "select * from samochody";
+                    utility.addItemsToComboBox(inq1, samochodyComboBox, 1);         // odświeża combobox samochodyComboBox
+
                     refreshAllTAbles();
 
                     MessageBox.Show("Dodano do bazy");
@@ -199,13 +203,28 @@ namespace Baza
                 name = nameTextBoxE.Text;
                 surname = surnameTextBoxE.Text;
 
-                inquiry = "update pracownicy set imie='" + name + "' where pracID=" + id + "";
-                DataShow(inquiry, pracownicyGrid);
 
-                inquiry = "update pracownicy set nazwisko='" + surname + "' where pracID=" + id + "";
-                DataShow(inquiry, pracownicyGrid);
+                if(row != null)
+                {
+                    inquiry = "update pracownicy set imie='" + name + "' where pracID=" + id + "";
+                    DataShow(inquiry, pracownicyGrid);
 
-                refreshAllTAbles();                                           // odświeża wszystkie widoki
+                    inquiry = "update pracownicy set nazwisko='" + surname + "' where pracID=" + id + "";
+                    DataShow(inquiry, pracownicyGrid);
+                }
+
+                List<User> usersList = new List<User>();                    // tymczasowa lista użytkowników
+
+                usersList = Serialization.LoadUserFromFile(@"user.xml");    // lista zapisanych użytkowników z pliku
+
+                usersList[pracIndex].Name = name;
+                usersList[pracIndex].Surname = surname;
+
+                Serialization.SaveUserListToFile(usersList, @"user.xml");   // zapissanie zmienionej listy do pliku
+
+                MessageBox.Show(pracIndex.ToString()); 
+
+                refreshAllTAbles();                                          // odświeża wszystkie widoki
             }
             else if(sender.Equals(editCar))
             {
@@ -234,6 +253,16 @@ namespace Baza
 
                 refreshAllTAbles();                                             // odświeża wszystkie widoki
             }
+            else if(sender.Equals(editOrder))
+            {
+                string dataWyporzyczenia = dataWypozyczeniaDatePicker.Text;
+                string dataZwrotu = dataZwrotuDatePicker.Text;
+                string koszt = koszTextBox.Text;
+                inquiry = "update wypozyczenia set datawyp='"+ dataWyporzyczenia + "', datazwr='"+dataWyporzyczenia+"',koszt='"+koszt+"' where wypID='" +id +"'";
+                DataShow(inquiry, wypozyczeniGrid);
+                refreshAllTAbles();
+            }
+            
         }
 
         private void delete_Click(object sender, RoutedEventArgs e)            // wspolna metoda dla przycisków kasujących 
@@ -264,6 +293,13 @@ namespace Baza
             {
                 inquiry = "delete from wypozyczenia where wypID=" + id + "";
                 DataShow(inquiry, wypozyczeniGrid);                                 // skasownie rekordu
+
+                inquiry = "update samochody set zajety = 'false' where samID = " + samID + "";
+                DataShow(inquiry, wypozyczeniGrid);
+
+                string inq1 = "select * from samochody";
+                utility.addItemsToComboBox(inq1, samochodyComboBox, 1);         // odświeża combobox samochodyComboBox
+
                 refreshAllTAbles();
             }
         }
@@ -307,7 +343,7 @@ namespace Baza
                 if (row != null)
                 {
                     id = row.Row.ItemArray[0].ToString();
-
+                    pracIndex = pracownicyGrid.SelectedIndex;
                     nameTextBoxE.Text = row.Row.ItemArray[1].ToString();
                     surnameTextBoxE.Text = row.Row.ItemArray[2].ToString();
                 }   
@@ -333,6 +369,9 @@ namespace Baza
                 {
                     id = row.Row.ItemArray[0].ToString();
                     samID = row.Row.ItemArray[3].ToString();
+                    dataWypozyczeniaDatePicker.Text = row.Row.ItemArray[10].ToString();
+                    dataZwrotuDatePicker.Text = row.Row.ItemArray[11].ToString();
+                    koszTextBox.Text = row.Row.ItemArray[12].ToString();
                 }        
             }
             else if (sender.Equals(historiaGrid))
@@ -427,6 +466,7 @@ namespace Baza
             userButtonsList.Add(printOrder);
             userButtonsList.Add(printRaport);
             userButtonsList.Add(releaseOrder);
+            userButtonsList.Add(editOrder);
         }
 
         public void adminButtons()                              // funkcja dodaje przyciski do listy użytkownika
@@ -454,6 +494,7 @@ namespace Baza
             adminButtonsList.Add(editOrder);
 
             deleteEmployee.IsEnabled = false;
+            addEmployee.Visibility = Visibility.Hidden;
         }
 
         public void userButtonsDisable()                                    // funkcja ustawiająca przyciski użytkownika  na disable

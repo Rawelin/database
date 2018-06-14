@@ -172,10 +172,10 @@ namespace Baza
             confirChanges.IsEnabled = false;                                  // deaktywuje przycisk confirChanges
             daneAdminButton.Focus();                                          // ustawia kursror w polu daneAdminButton
 
-            usersList = Serialization.LoadUserFromFile(@"user.xml");           // funkcja wgrywająca użytkowników do listy z pliku
-            adminList = Serialization.LoadUserFromFile(@"admin.xml");          // funkcja wgrywająca administratorów do listy z pliku
+            usersList = Serialization.LoadUserFromFile(@"user.xml");          // funkcja wgrywająca użytkowników do listy z pliku
+            adminList = Serialization.LoadUserFromFile(@"admin.xml");         // funkcja wgrywająca administratorów do listy z pliku
 
-            string inquiry = "Select * from pracownicy";                       // odświeżenie widoku pracownicy po dodaniu rekordu
+            string inquiry = "Select * from pracownicy";                      // odświeżenie widoku pracownicy po dodaniu rekordu
             DataShow(inquiry, pracownicyGrid);
 
             // CreateFirstAdmin();

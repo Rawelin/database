@@ -258,7 +258,7 @@ namespace Baza
                 string dataWyporzyczenia = dataWypozyczeniaDatePicker.Text;
                 string dataZwrotu = dataZwrotuDatePicker.Text;
                 string koszt = koszTextBox.Text;
-                inquiry = "update wypozyczenia set datawyp='"+ dataWyporzyczenia + "', datazwr='"+dataWyporzyczenia+"',koszt='"+koszt+"' where wypID='" +id +"'";
+                inquiry = "update wypozyczenia set datawyp='"+ dataWyporzyczenia + "', datazwr='"+ dataZwrotu + "',koszt='"+koszt+"' where wypID='" +id +"'";
                 DataShow(inquiry, wypozyczeniGrid);
                 refreshAllTAbles();
             }
@@ -440,7 +440,7 @@ namespace Baza
             inquiry = "Select * from samochody";                              // odświeżenie widoku samochody po dodaniu rekordu
             DataShow(inquiry, samochodyGrid);
 
-            inquiry = "select wypozyczenia.wypID, klienci.imie, klienci.nazwisko, samochody.samID, samochody.marka, samochody.model, samochody.zajety, pracownicy.pracID, pracownicy.imie as imiePrac, pracownicy.nazwisko as nazwiskoPrac, wypozyczenia.datawyp, wypozyczenia.datazwr, wypozyczenia.koszt " +
+            inquiry = "select wypozyczenia.wypID, klienci.imie, klienci.nazwisko, samochody.samID, samochody.marka, samochody.model, samochody.zajety, pracownicy.pracID, pracownicy.imie as imiePrac, pracownicy.nazwisko as nazwiskoPrac, wypozyczenia.datawyp, wypozyczenia.datazwr, wypozyczenia.koszt, datediff(day,datawyp, datazwr) as IloscDni, datediff(day,GETDATE(), datazwr) as DniDoZwrotu " +
                 "from klienci, samochody, wypozyczenia, pracownicy " +
                 "where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID and wypozyczenia.pracID = pracownicy.pracID";
            // inquiry = "select wypozyczenia.wypID, klienci.klientID, pracownicy.pracID, samochody.marka, samochody.model,  wypozyczenia.datawyp, wypozyczenia.datazwr, wypozyczenia.koszt from klienci, samochody, wypozyczenia, pracownicy where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID and wypozyczenia.pracID = pracownicy.pracID ";

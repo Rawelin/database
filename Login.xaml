@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Baza"
         mc:Ignorable="d"
-        Title="Login" Height="200" Width="300" ResizeMode="NoResize" >
+        Title="Login" Height="200" Width="300" ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen">
 
     <Canvas>
         <Label Canvas.Left="81" Canvas.Top="28">Login</Label>

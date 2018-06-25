@@ -8,7 +8,8 @@
         Title="Wypożyczalnia Samochodów" Height="800" Width="1200"
         ResizeMode="NoResize"
          Icon="./Resources/base.png"
-        WindowStyle="ThreeDBorderWindow">
+        WindowStyle="ThreeDBorderWindow"
+        WindowStartupLocation="CenterScreen">
 
     <StackPanel>
         <DockPanel>
@@ -39,6 +40,42 @@
         </DockPanel>
         <Grid>
             <TabControl Height="710">
+
+                <TabItem Header="Wypozyczenia">
+
+                    <StackPanel>
+                        <Grid Margin="10" Height="665">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="850"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <DataGrid Grid.Column="0"  Name="wypozyczeniGrid" AutoGenerateColumns="True" SelectionChanged="grid_SelectionChanged"/>
+
+                            <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10 0 0 0">
+                                <TextBlock>Samochody</TextBlock>
+                                <ComboBox x:Name="samochodyComboBox"></ComboBox>
+                                <TextBlock>Klienci</TextBlock>
+                                <ComboBox x:Name="klienciComboBox"></ComboBox>
+                                <TextBlock>Pracownicy</TextBlock>
+                                <ComboBox x:Name="pracownicyComboBox"></ComboBox>
+                                <TextBlock >Data wypożyczenia:</TextBlock>
+                                <DatePicker x:Name="dataWypozyczeniaDatePicker" SelectedDateChanged="dataPicker_SelectionChanged"></DatePicker>
+                                <TextBlock>Data zwrotu:</TextBlock>
+                                <DatePicker x:Name="dataZwrotuDatePicker" SelectedDateChanged="dataPicker_SelectionChanged"></DatePicker>
+                                <TextBlock>Koszt</TextBlock>
+                                <TextBox x:Name="koszTextBox" PreviewTextInput="NumberValidationTextBox" MaxLength="6" />
+                                <Button x:Name="addOrder" Click="add_Click" Margin="0 2 0 0">Zapisz</Button>
+                                <Button x:Name="releaseOrder" Click="edit_Click" Margin="0 2 0 0">Zwolnij</Button>
+                                <Button x:Name="editOrder" Click="edit_Click" Margin="0 2 0 0">Edytuj</Button>
+                                <Button x:Name="deleteOrder" Click="delete_Click" Margin="0 2 0 0">Kasuj</Button>
+                                <Button x:Name="printOrder" Click="print_Click" Margin="0 2 0 0">Drukuj</Button>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+
+                </TabItem>
 
                 <TabItem Header="Klienci">
                     <StackPanel>
@@ -116,42 +153,6 @@
                             </StackPanel>
                         </Grid>
                     </StackPanel>
-                </TabItem>
-
-                <TabItem Header="Wypozyczenia">
-
-                    <StackPanel>
-                        <Grid Margin="10" Height="665">
-
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="850"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-
-                            <DataGrid Grid.Column="0"  Name="wypozyczeniGrid" AutoGenerateColumns="True" SelectionChanged="grid_SelectionChanged"/>
-
-                            <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10 0 0 0">
-                                <TextBlock>Samochody</TextBlock>
-                                <ComboBox x:Name="samochodyComboBox"></ComboBox>
-                                <TextBlock>Klienci</TextBlock>
-                                <ComboBox x:Name="klienciComboBox"></ComboBox>
-                                <TextBlock>Pracownicy</TextBlock>
-                                <ComboBox x:Name="pracownicyComboBox"></ComboBox>
-                                <TextBlock >Data wypożyczenia:</TextBlock>
-                                <DatePicker x:Name="dataWypozyczeniaDatePicker" SelectedDateChanged="dataPicker_SelectionChanged"></DatePicker>
-                                <TextBlock>Data zwrotu:</TextBlock>
-                                <DatePicker x:Name="dataZwrotuDatePicker" SelectedDateChanged="dataPicker_SelectionChanged"></DatePicker>
-                                <TextBlock>Koszt</TextBlock>
-                                <TextBox x:Name="koszTextBox" PreviewTextInput="NumberValidationTextBox" MaxLength="6" />
-                                <Button x:Name="addOrder" Click="add_Click" Margin="0 2 0 0">Zapisz</Button>
-                                <Button x:Name="releaseOrder" Click="edit_Click" Margin="0 2 0 0">Zwolnij</Button>
-                                <Button x:Name="editOrder" Click="edit_Click" Margin="0 2 0 0">Edytuj</Button>
-                                <Button x:Name="deleteOrder" Click="delete_Click" Margin="0 2 0 0">Kasuj</Button>
-                                <Button x:Name="printOrder" Click="print_Click" Margin="0 2 0 0">Drukuj</Button>
-                            </StackPanel>
-                        </Grid>
-                    </StackPanel>
-
                 </TabItem>
 
                 <TabItem Header="Raporty">

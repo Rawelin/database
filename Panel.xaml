@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:Baza"
         mc:Ignorable="d"
         ResizeMode="NoResize"
-        Title="Panel Administratora" Height="420" Width="600">
+        Title="Panel Administratora" Height="420" Width="600"
+        WindowStartupLocation="CenterScreen">
 
     <StackPanel>
         <Grid>

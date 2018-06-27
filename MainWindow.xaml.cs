@@ -122,9 +122,10 @@ namespace Baza
                 string brand = brandTextBoxS.Text;
                 string model = modelTextBoxS.Text;
                 string color = colorTextBoxS.Text;
+                string cena = cenaTextBoxS.Text;
                 string status = "false";
 
-                inquiry = "insert into samochody values('" + brand + "', '" + model + "', '" + color + "', '" +status+ "')";
+                inquiry = "insert into samochody values('" + brand + "', '" + model + "', '" + color + "', '" +status+ "', '" + cena + "')";
                 DataShow(inquiry, samochodyGrid);                              // dodanie rekordu
                 refreshAllTAbles();                                            // odświeża wszystkie widoki
             }
@@ -150,8 +151,10 @@ namespace Baza
 
                 string koszt = koszTextBox.Text;                              // koszt z pola tekstowego koszTextBox
 
+                //  row.Row.ItemArray[3].ToString();
 
-                if((!string.IsNullOrEmpty(samID)) && (!string.IsNullOrEmpty(pracID)) && (!string.IsNullOrEmpty(klientID)) && (!string.IsNullOrEmpty(koszt)))
+
+                if ((!string.IsNullOrEmpty(samID)) && (!string.IsNullOrEmpty(pracID)) && (!string.IsNullOrEmpty(klientID)) && (!string.IsNullOrEmpty(koszt)))
                 {
                     inquiry = "insert into wypozyczenia values(" + samID + ", " + pracID + ", " + klientID + ", '" + datawyp + "', '" + datazwr + "', " + koszt + ")";
 
@@ -231,14 +234,18 @@ namespace Baza
                 string brand = brandTextBoxS.Text;
                 string model = modelTextBoxS.Text;
                 string color = colorTextBoxS.Text;
+                string cena = cenaTextBoxS.Text;
 
-                inquiry = "update samochody set marka='" + brand + "' where samID=" + id + "";
+                inquiry = "update samochody set marka='" + brand + "' where samID=" + id + "";      // można zrobić w jednym zapytnaiu
                 DataShow(inquiry, samochodyGrid);
 
                 inquiry = "update samochody set model='" + model + "' where samID=" + id + "";
                 DataShow(inquiry, samochodyGrid);
 
                 inquiry = "update samochody set kolor='" + color + "' where samID=" + id + "";
+                DataShow(inquiry, samochodyGrid);
+
+                inquiry = "update samochody set kolor='" + cena + "' where samID=" + id + "";
                 DataShow(inquiry, samochodyGrid);
 
                 refreshAllTAbles();                                             // odświeża wszystkie widoki
@@ -359,6 +366,7 @@ namespace Baza
                     brandTextBoxS.Text = row.Row.ItemArray[1].ToString();
                     modelTextBoxS.Text = row.Row.ItemArray[2].ToString();
                     colorTextBoxS.Text = row.Row.ItemArray[3].ToString();
+                    cenaTextBoxS.Text = row.Row.ItemArray[5].ToString();
                 }   
             }
             else if (sender.Equals(wypozyczeniGrid))
@@ -369,9 +377,9 @@ namespace Baza
                 {
                     id = row.Row.ItemArray[0].ToString();
                     samID = row.Row.ItemArray[3].ToString();
-                    dataWypozyczeniaDatePicker.Text = row.Row.ItemArray[10].ToString();
-                    dataZwrotuDatePicker.Text = row.Row.ItemArray[11].ToString();
-                    koszTextBox.Text = row.Row.ItemArray[12].ToString();
+                    dataWypozyczeniaDatePicker.Text = row.Row.ItemArray[11].ToString();
+                    dataZwrotuDatePicker.Text = row.Row.ItemArray[12].ToString();
+                    koszTextBox.Text = row.Row.ItemArray[13].ToString();
                 }        
             }
             else if (sender.Equals(historiaGrid))
@@ -388,7 +396,7 @@ namespace Baza
 
         private void topCars_Click(object sender, RoutedEventArgs e)
         {
-            inquiry = "Select marka, model, count(samochody.samID) as 'Wypożyczenia' from wypozyczenia, samochody where wypozyczenia.samID = samochody.samID group by marka, model;";
+            inquiry = "Select marka, model, count(samochody.samID) as 'Wypożyczenia', sum(wypozyczenia.koszt) as koszt from wypozyczenia, samochody where wypozyczenia.samID = samochody.samID group by marka, model order by koszt DESC; ";
             DataShow(inquiry, raportyGrid);
         }
 
@@ -440,10 +448,14 @@ namespace Baza
             inquiry = "Select * from samochody";                              // odświeżenie widoku samochody po dodaniu rekordu
             DataShow(inquiry, samochodyGrid);
 
-            inquiry = "select wypozyczenia.wypID, klienci.imie, klienci.nazwisko, samochody.samID, samochody.marka, samochody.model, samochody.zajety, pracownicy.pracID, pracownicy.imie as imiePrac, pracownicy.nazwisko as nazwiskoPrac, wypozyczenia.datawyp, wypozyczenia.datazwr, wypozyczenia.koszt, datediff(day,datawyp, datazwr) as IloscDni, datediff(day,GETDATE(), datazwr) as DniDoZwrotu " +
-                "from klienci, samochody, wypozyczenia, pracownicy " +
-                "where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID and wypozyczenia.pracID = pracownicy.pracID";
-           // inquiry = "select wypozyczenia.wypID, klienci.klientID, pracownicy.pracID, samochody.marka, samochody.model,  wypozyczenia.datawyp, wypozyczenia.datazwr, wypozyczenia.koszt from klienci, samochody, wypozyczenia, pracownicy where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID and wypozyczenia.pracID = pracownicy.pracID ";
+            inquiry = "select wypozyczenia.wypID, klienci.imie, klienci.nazwisko, samochody.samID, samochody.marka, samochody.model, samochody.zajety, samochody.cenaDoby, pracownicy.pracID, pracownicy.imie as imiePrac, pracownicy.nazwisko as nazwiskoPrac, wypozyczenia.datawyp, wypozyczenia.datazwr, wypozyczenia.koszt as RabatKoszt, (datediff(day,datawyp, datazwr) * samochody.cenaDoby) as Koszt, datediff(day,datawyp, datazwr) as IloscDni, datediff(day,GETDATE(), datazwr) as DniDoZwrotu " +
+          "from klienci, samochody, wypozyczenia, pracownicy " +
+          "where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID and wypozyczenia.pracID = pracownicy.pracID";
+
+            //inquiry = "select wypozyczenia.wypID, klienci.imie, klienci.nazwisko, samochody.samID, samochody.marka, samochody.model, samochody.zajety, samochody.cenaDoby, pracownicy.pracID, pracownicy.imie as imiePrac, pracownicy.nazwisko as nazwiskoPrac, wypozyczenia.datawyp, wypozyczenia.datazwr, wypozyczenia.koszt, datediff(day,datawyp, datazwr) as IloscDni, datediff(day,GETDATE(), datazwr) as DniDoZwrotu " +
+            //    "from klienci, samochody, wypozyczenia, pracownicy " +
+            //    "where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID and wypozyczenia.pracID = pracownicy.pracID";
+            // inquiry = "select wypozyczenia.wypID, klienci.klientID, pracownicy.pracID, samochody.marka, samochody.model,  wypozyczenia.datawyp, wypozyczenia.datazwr, wypozyczenia.koszt from klienci, samochody, wypozyczenia, pracownicy where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID and wypozyczenia.pracID = pracownicy.pracID ";
             DataShow(inquiry, wypozyczeniGrid);                                // odświeżenie widoku wypożyczenia
 
             inquiry = "select wypozyczenia.wypID, klienci.imie, klienci.nazwisko, samochody.marka, samochody.model, wypozyczenia.datawyp, wypozyczenia.datazwr " +

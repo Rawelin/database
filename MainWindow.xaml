@@ -64,7 +64,7 @@
                                 <DatePicker x:Name="dataWypozyczeniaDatePicker" SelectedDateChanged="dataPicker_SelectionChanged"></DatePicker>
                                 <TextBlock>Data zwrotu:</TextBlock>
                                 <DatePicker x:Name="dataZwrotuDatePicker" SelectedDateChanged="dataPicker_SelectionChanged"></DatePicker>
-                                <TextBlock>Koszt</TextBlock>
+                                <TextBlock>Koszt po rabacie</TextBlock>
                                 <TextBox x:Name="koszTextBox" PreviewTextInput="NumberValidationTextBox" MaxLength="6" />
                                 <Button x:Name="addOrder" Click="add_Click" Margin="0 2 0 0">Zapisz</Button>
                                 <Button x:Name="releaseOrder" Click="edit_Click" Margin="0 2 0 0">Zwolnij</Button>
@@ -147,6 +147,8 @@
                                 <TextBox x:Name="modelTextBoxS" MaxLength="25"/>
                                 <TextBlock>Kolor:</TextBlock>
                                 <TextBox x:Name="colorTextBoxS" MaxLength="20"/>
+                                <TextBlock>Cena:</TextBlock>
+                                <TextBox x:Name="cenaTextBoxS" MaxLength="20" PreviewTextInput="NumberValidationTextBox"/>
                                 <Button x:Name="addCar" Click="add_Click" Margin="0 10 0 0">Dodaj</Button>
                                 <Button x:Name="editCar" Click="edit_Click">Edytuj</Button>
                                 <Button x:Name="deleteCar" Click="delete_Click">Kasuj</Button>

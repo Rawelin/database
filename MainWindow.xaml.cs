@@ -127,7 +127,11 @@ namespace Baza
 
                 inquiry = "insert into samochody values('" + brand + "', '" + model + "', '" + color + "', '" +status+ "', '" + cena + "')";
                 DataShow(inquiry, samochodyGrid);                              // dodanie rekordu
+                string inq1 = "select * from samochody";
+                utility.addItemsToComboBox(inq1, samochodyComboBox, 1);         // odświeża combobox samochodyComboBox
                 refreshAllTAbles();                                            // odświeża wszystkie widoki
+
+              
             }
             else if(sender.Equals(addOrder))
             {

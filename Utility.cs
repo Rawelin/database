@@ -41,7 +41,6 @@ namespace Baza
                 DR.Close();
             }
 
-
         }
 
         public static string TrimPath(string path)                                    // metoda usuwająca wszystkie znaki po kropce łacznie z nią

@@ -7,7 +7,7 @@ namespace Baza
 {
     class Serialization
     {
-        public static void SaveUserListToFile(List<User> usersList, string usersPath)                                        // metoda zapisująca lisę użytkowniko do pliku
+        public static void SaveUserListToFile(List<User> usersList, string usersPath)                                       
         {
 
             using (Stream fs = new FileStream(usersPath, FileMode.Create, FileAccess.Write, FileShare.None))   // zapis do pliku

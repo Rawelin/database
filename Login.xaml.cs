@@ -41,13 +41,9 @@ namespace Baza
             {
                 if (this.loginTextBox.Text.Equals(usersList[i].Name) && passwordBox.Password.Equals(usersList[i].Password))   // walidacja loginu i hasła dla użytkownika
                 {
-                    this.Close();                                           // zamyka okno Login
+                    this.Close();                                          // zamyka okno Login
 
-                    mainWindow.StartConnection();                           // aktywuje funkcję z MainWindow
-                    mainWindow.userButtonsEnable();
-                    mainWindow.loginDisable();
-                    mainWindow.Status.Content = "Połączony z bazą jako użytkownik: " + usersList[i].Name + " " + usersList[i].Surname + " ID: " + usersList[i].ID;   // aktualizuje etykietę napisem
-
+                    LoginProcess(mainWindow, usersList, i, true);
 
                     mainWindow.pracownicyComboBox.Items.Clear();
                     mainWindow.pracownicyComboBox.Items.Add(usersList[i].ID);
@@ -59,31 +55,40 @@ namespace Baza
             {
                 if (this.loginTextBox.Text.Equals(adminList[i].Name) && passwordBox.Password.ToString().Equals(adminList[i].Password)) // walidacja loginu i hasła dla administratora
                 {
-                    this.Close();                                           // zamyka okno Login
+                    this.Close();                                          // zamyka okno Login
 
-                    mainWindow.StartConnection();                           // aktywuje funkcję z MainWindow
-                    mainWindow.adminButtonsEnable();
-                    mainWindow.loginDisable();
-                    mainWindow.Status.Content = "Połączony z bazą jako Administrator";  // aktualizuje etykietę napisem
+                    LoginProcess(mainWindow, adminList, i, false);
                 }
             }
-      
-            loginTextBox.Text = "";                                    // czyści pole tekstowe login
-            passwordBox.Password = "";                                 // czyści pole pasword
+          
+            loginTextBox.Text = "";                                        // czyści pole tekstowe login
+            passwordBox.Password = "";                                     // czyści pole pasword
             messageLabel.Content = "Dane są nieprawidłowe.";
         }
 
-        private void Cancel_Click(object sender, RoutedEventArgs e)     // metoda przycisku cancel
+        private void Cancel_Click(object sender, RoutedEventArgs e)        // metoda przycisku cancel
         {
-            MessageBox.Show("Nie połączono z bazą danych");             // wyświetla messagebox na ekran
-            this.Close();                                               // zamyka okno Login
+            MessageBox.Show("Nie połączono z bazą danych");                // wyświetla messagebox na ekran
+            this.Close();                                                  // zamyka okno Login
         }
         private void Initailize()
-        {
-                                                      // inicjalizacja mainWindow obiektem pobranym przez konstruktor
+        {                                                                  // inicjalizacja mainWindow obiektem pobranym przez konstruktor
             usersList = Serialization.LoadUserFromFile(@"user.xml");       // funkcja wgrywająca użytkowników do listy z pliku
             adminList = Serialization.LoadUserFromFile(@"admin.xml");      // funkcja wgrywająca administratorów do listy z pliku
             loginTextBox.Focus();
+        }
+        private void LoginProcess(MainWindow mainWindow, List<User> lista, int index, bool userType)
+        {
+            mainWindow.StartConnection();                                  // aktywuje funkcję z MainWindow
+            mainWindow.userButtonsEnable();
+            mainWindow.loginDisable();
+
+            string text = "Połączony z bazą jako użytkownik";
+
+            string userFormat = string.Format("{0}: {1} {2} Id: {3}", text, lista[index].Name, lista[index].Surname, lista[index].ID);
+            string adminFormat = string.Format("{0}: {1}", text, lista[index].Name);
+
+            mainWindow.Status.Content = userType == true ? userFormat : adminFormat;
         }
     }
 }

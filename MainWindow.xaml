@@ -53,7 +53,7 @@
 
                             <DataGrid Grid.Column="0"  Name="wypozyczeniGrid" AutoGenerateColumns="True" SelectionChanged="grid_SelectionChanged"/>
 
-                            <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10 0 0 0">
+                            <StackPanel Grid.Column="1" Orientation="Vertical" Style="{StaticResource StackPanelMargin}">
                                 <TextBlock>Samochody</TextBlock>
                                 <ComboBox x:Name="samochodyComboBox"></ComboBox>
                                 <TextBlock>Klienci</TextBlock>
@@ -66,11 +66,11 @@
                                 <DatePicker x:Name="dataZwrotuDatePicker" SelectedDateChanged="dataPicker_SelectionChanged"></DatePicker>
                                 <TextBlock>Koszt po rabacie</TextBlock>
                                 <TextBox x:Name="koszTextBox" PreviewTextInput="NumberValidationTextBox" MaxLength="6" />
-                                <Button x:Name="addOrder" Click="add_Click" Margin="0 2 0 0">Zapisz</Button>
-                                <Button x:Name="releaseOrder" Click="edit_Click" Margin="0 2 0 0">Zwolnij</Button>
-                                <Button x:Name="editOrder" Click="edit_Click" Margin="0 2 0 0">Edytuj</Button>
-                                <Button x:Name="deleteOrder" Click="delete_Click" Margin="0 2 0 0">Kasuj</Button>
-                                <Button x:Name="printOrder" Click="print_Click" Margin="0 2 0 0">Drukuj</Button>
+                                <Button x:Name="addOrder" Click="add_Click" Style="{StaticResource ButtonMargin}">Zapisz</Button>
+                                <Button x:Name="releaseOrder" Click="edit_Click" Style="{StaticResource ButtonMargin}">Zwolnij</Button>
+                                <Button x:Name="editOrder" Click="edit_Click" Style="{StaticResource ButtonMargin}">Edytuj</Button>
+                                <Button x:Name="deleteOrder" Click="delete_Click" Style="{StaticResource ButtonMargin}">Kasuj</Button>
+                                <Button x:Name="printOrder" Click="print_Click" Style="{StaticResource ButtonMargin}">Drukuj</Button>
                             </StackPanel>
                         </Grid>
                     </StackPanel>
@@ -89,16 +89,16 @@
 
                             <DataGrid Grid.Column="0" Name="klienciGrid" AutoGenerateColumns="True" SelectionChanged="grid_SelectionChanged" Grid.ColumnSpan="2"/>
 
-                            <StackPanel Grid.Column="2" Orientation="Vertical" Margin="10 0 0 0">
+                            <StackPanel Grid.Column="2" Orientation="Vertical"  Style="{StaticResource StackPanelMargin}">
                                 <TextBlock>Imię:</TextBlock>
                                 <TextBox x:Name="nameTextBoxC" MaxLength="20"/>
                                 <TextBlock>Nazwisko:</TextBlock>
                                 <TextBox x:Name="surnameTextBoxC" MaxLength="25"/>
                                 <TextBlock>Pesel:</TextBlock>
                                 <TextBox x:Name="peselTextBoxC" MaxLength="11"  PreviewTextInput="NumberValidationTextBox"/>
-                                <Button x:Name="addClient" Click="add_Click" Margin="0 10 0 0">Dodaj</Button>
-                                <Button x:Name="editClient" Click="edit_Click">Edytuj</Button>
-                                <Button x:Name="deleteClient" Click="delete_Click">Kasuj</Button>
+                                <Button x:Name="addClient" Click="add_Click" Style="{StaticResource ButtonMargin}">Dodaj</Button>
+                                <Button x:Name="editClient" Click="edit_Click"  Style="{StaticResource ButtonMargin}">Edytuj</Button>
+                                <Button x:Name="deleteClient" Click="delete_Click"  Style="{StaticResource ButtonMargin}">Kasuj</Button>
                             </StackPanel>
 
                         </Grid>
@@ -116,14 +116,14 @@
 
                             <DataGrid Grid.Column="0" Name="pracownicyGrid" AutoGenerateColumns="True" SelectionChanged="grid_SelectionChanged"  />
 
-                            <StackPanel Grid.Column="2" Orientation="Vertical" Margin="10 0 0 0">
+                            <StackPanel Grid.Column="2" Orientation="Vertical" Style="{StaticResource StackPanelMargin}">
                                 <TextBlock>Imię:</TextBlock>
                                 <TextBox x:Name="nameTextBoxE" MaxLength="20"/>
                                 <TextBlock>Nazwisko:</TextBlock>
                                 <TextBox x:Name="surnameTextBoxE" MaxLength="25"/>
-                                <Button x:Name="addEmployee" Click="add_Click" Margin="0 10 0 0">Dodaj</Button>
-                                <Button x:Name="editEmployee" Click="edit_Click">Edytuj</Button>
-                                <Button x:Name="deleteEmployee" Click="delete_Click">Kasuj</Button>
+                                <Button x:Name="addEmployee" Click="add_Click" Style="{StaticResource ButtonMargin}">Dodaj</Button>
+                                <Button x:Name="editEmployee" Click="edit_Click"  Style="{StaticResource ButtonMargin}">Edytuj</Button>
+                                <Button x:Name="deleteEmployee" Click="delete_Click"  Style="{StaticResource ButtonMargin}">Kasuj</Button>
                             </StackPanel>
                         </Grid>
                     </StackPanel>
@@ -140,7 +140,7 @@
 
                             <DataGrid Grid.Column="0" Name="samochodyGrid" AutoGenerateColumns="True"   SelectionChanged="grid_SelectionChanged" />
 
-                            <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10 0 0 0">
+                            <StackPanel Grid.Column="1" Orientation="Vertical"  Style="{StaticResource StackPanelMargin}">
                                 <TextBlock>Marka:</TextBlock>
                                 <TextBox x:Name="brandTextBoxS" MaxLength="20"/>
                                 <TextBlock>Model:</TextBlock>
@@ -149,9 +149,9 @@
                                 <TextBox x:Name="colorTextBoxS" MaxLength="20"/>
                                 <TextBlock>Cena:</TextBlock>
                                 <TextBox x:Name="cenaTextBoxS" MaxLength="20" PreviewTextInput="NumberValidationTextBox"/>
-                                <Button x:Name="addCar" Click="add_Click" Margin="0 10 0 0">Dodaj</Button>
-                                <Button x:Name="editCar" Click="edit_Click">Edytuj</Button>
-                                <Button x:Name="deleteCar" Click="delete_Click">Kasuj</Button>
+                                <Button x:Name="addCar" Click="add_Click"  Style="{StaticResource ButtonMargin}">Dodaj</Button>
+                                <Button x:Name="editCar" Click="edit_Click"  Style="{StaticResource ButtonMargin}">Edytuj</Button>
+                                <Button x:Name="deleteCar" Click="delete_Click"  Style="{StaticResource ButtonMargin}">Kasuj</Button>
                             </StackPanel>
                         </Grid>
                     </StackPanel>
@@ -182,10 +182,10 @@
                             <DataGrid Grid.Column="0" Name="raportyGrid" AutoGenerateColumns="True"/>
 
                             <StackPanel Grid.Column="1">
-                                <Button x:Name="topClients" Click="topClient_Click" Margin="10 0 0 0">Top Klienci</Button>
-                                <Button x:Name="topCars" Click="topCars_Click" Margin="10 0 0 0">Top Samochody</Button>
-                                <Button x:Name="topEmployee" Click="topEmployees_Click" Margin="10 0 0 0">Top Pracownicy</Button>
-                                <Button x:Name="printRaport" Click="print_Click" Margin="10 0 0 0">Drukuj</Button>
+                                <Button x:Name="topClients" Click="topClient_Click"  Style="{StaticResource ButtonMargin2}">Top Klienci</Button>
+                                <Button x:Name="topCars" Click="topCars_Click" Style="{StaticResource ButtonMargin2}">Top Samochody</Button>
+                                <Button x:Name="topEmployee" Click="topEmployees_Click" Style="{StaticResource ButtonMargin2}">Top Pracownicy</Button>
+                                <Button x:Name="printRaport" Click="print_Click" Style="{StaticResource ButtonMargin2}">Drukuj</Button>
                             </StackPanel>
 
                         </Grid>

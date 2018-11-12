@@ -16,29 +16,29 @@ namespace Baza
 
         public void addItemsToComboBox(string inq, ComboBox comboBox, int atr = 0)               // metoda dodaje elementy do combobox;
         {
-            SqlCommand cmd = new SqlCommand(inq, connection);
-            SqlDataReader DR = cmd.ExecuteReader();
+            SqlCommand command = new SqlCommand(inq, connection);
+            SqlDataReader dataReader = command.ExecuteReader();
 
             comboBox.Items.Clear();
 
             if(atr == 0)
             {
-                while (DR.Read())
+                while (dataReader.Read())
                 {
-                    comboBox.Items.Add(DR[0] + ". " + DR[1] + " " + DR[2]);
+                    comboBox.Items.Add(dataReader[0] + ". " + dataReader[1] + " " + dataReader[2]);
                 }
-                DR.Close();
+                dataReader.Close();
             }
             if (atr == 1)
             {
-                while (DR.Read())
+                while (dataReader.Read())
                 {
-                    if (DR[4].ToString().Equals("False"))                                        // dodje tylko dostępne samochody
+                    if (dataReader[4].ToString().Equals("False"))                                        // dodje tylko dostępne samochody
                     {
-                        comboBox.Items.Add(DR[0] + ". " + DR[1] + " " + DR[2]);
+                        comboBox.Items.Add(dataReader[0] + ". " + dataReader[1] + " " + dataReader[2]);
                     }
                 }
-                DR.Close();
+                dataReader.Close();
             }
 
         }

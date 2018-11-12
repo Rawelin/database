@@ -1,0 +1,5 @@
+﻿- marginesy do stylu
+- takie funkcje jak Login_Click zrobić jedną funkcję i wywoływać z parametrami
+- utility additemstocombobox poprawić czytelność zmiennych
+- zapytania zabezpieczyc
+- zapytania wyodrebnic do osobnej klasy

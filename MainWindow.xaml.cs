@@ -50,7 +50,7 @@ namespace Baza
                 string inq2 = "select * from klienci";
              //   string inq3 = "select * from pracownicy";
 
-                utility.addItemsToComboBox(inq1, samochodyComboBox, 1);                    // dodawanie pól z bazy do combobox
+                utility.addItemsToComboBox(inq1, samochodyComboBox, 1);                  // dodawanie pól z bazy do combobox
                 utility.addItemsToComboBox(inq2, klienciComboBox);
              //   utility.addItemsToComboBox(inq3, pracownicyComboBox);
             }

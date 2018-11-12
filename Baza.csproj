@@ -81,6 +81,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Style.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Panel.xaml.cs">
@@ -130,6 +134,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\base.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="uwagi.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

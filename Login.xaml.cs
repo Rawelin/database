@@ -79,16 +79,24 @@ namespace Baza
         }
         private void LoginProcess(MainWindow mainWindow, List<User> lista, int index, bool userType)
         {
-            mainWindow.StartConnection();                                  // aktywuje funkcję z MainWindow
-            mainWindow.userButtonsEnable();
-            mainWindow.loginDisable();
+             mainWindow.StartConnection();                                  // inicjalizuje polączenie z bazą
 
+            if (userType == true)
+            {
+                mainWindow.userButtonsEnable();
+            }
+            else
+            {
+                mainWindow.adminButtonsEnable();     
+            }
+         
             string text = "Połączony z bazą jako użytkownik";
 
             string userFormat = string.Format("{0}: {1} {2} Id: {3}", text, lista[index].Name, lista[index].Surname, lista[index].ID);
             string adminFormat = string.Format("{0}: {1}", text, lista[index].Name);
 
             mainWindow.Status.Content = userType == true ? userFormat : adminFormat;
+            mainWindow.loginDisable();
         }
     }
 }

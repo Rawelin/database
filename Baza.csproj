@@ -55,7 +55,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Connection\DataFill.cs" />
     <Compile Include="Serialization.cs" />
+    <Compile Include="Connection\SetConnection.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Utility.cs" />
     <Page Include="Login.xaml">

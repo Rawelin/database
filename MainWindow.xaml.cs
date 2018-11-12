@@ -8,6 +8,7 @@ using System.Configuration;                       // for ConfigurationManger - a
 using System.Data;                                // for DataTable
 using System.Text.RegularExpressions;
 using System.Diagnostics;
+using Baza.Connection;
 
 namespace Baza
 {
@@ -24,7 +25,9 @@ namespace Baza
         private Utility utility;
         private List<Button> userButtonsList;                         // lista przycisków dostępnych dla użytkownika 
         private List<Button> adminButtonsList;                        // lista przycisków dostępnych dla administratora 
-
+        private SetConnection setConnection;
+        private DataFill dataFill;
+       
         public MainWindow()
         {
             InitializeComponent();
@@ -32,32 +35,28 @@ namespace Baza
             userButtons();                                             // inicjuje przycisi użytkownika
             adminButtonsDisable();                                     // deaktywuje wszystkie przyciski
             loginEnable();                                             // aktywuje logowanie
+
+            dataFill = new DataFill();
+            setConnection = new SetConnection();
+
         }
 
         public void StartConnection()
         {
-            try
-            {
-                connection = new SqlConnection();                                        // tworzy nowe polączenie SQL
-                connection.ConnectionString = ConfigurationManager.ConnectionStrings["wypozyczalnia"].ConnectionString;  // ścieżka do bazy zmajdująca się w App.config
-                connection.Open();                                                       // otwiera polączenie
+           
+            connection = setConnection.GetConnection();                              // otwiera polączenie
 
-                refreshAllTAbles();                                                      // odświeża wszystkie widoki
+            refreshAllTAbles();                                                      // odświeża wszystkie widoki
 
-                utility = new Utility(connection);
+            utility = new Utility(connection);
 
-                string inq1 = "select * from samochody";
-                string inq2 = "select * from klienci";
+            string inq1 = "select * from samochody";
+            string inq2 = "select * from klienci";
              //   string inq3 = "select * from pracownicy";
 
-                utility.addItemsToComboBox(inq1, samochodyComboBox, 1);                  // dodawanie pól z bazy do combobox
-                utility.addItemsToComboBox(inq2, klienciComboBox);
+            utility.addItemsToComboBox(inq1, samochodyComboBox, 1);                  // dodawanie pól z bazy do combobox
+            utility.addItemsToComboBox(inq2, klienciComboBox);
              //   utility.addItemsToComboBox(inq3, pracownicyComboBox);
-            }
-            catch (Exception ex)                                                         // wyłapuje wyjątki kiedy coś pójdzie nie tak
-            {
-                MessageBox.Show("Connection Failure", ex.Message);                       // wyświetla messagebox na ekranie
-            }
         }
 
         private void Start_Click(object sender, RoutedEventArgs e)                       // przycisk start w raportach
@@ -444,7 +443,8 @@ namespace Baza
         private void refreshAllTAbles()                                       // odświeża wszystkie tabele
         {
             inquiry = "Select * from klienci";                                // odświeżenie widoku klienci po dodaniu rekordu
-            DataShow(inquiry, klienciGrid);
+            dataFill.DataShow(inquiry, klienciGrid, connection);
+           // DataShow(inquiry, klienciGrid);
 
             inquiry = "Select * from pracownicy";                             // odświeżenie widoku pracownicy po dodaniu rekordu
             DataShow(inquiry, pracownicyGrid);

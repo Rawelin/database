@@ -14,7 +14,7 @@ namespace Baza
             this.connection = connection;
         }
 
-        public void addItemsToComboBox(string inq, ComboBox comboBox, int atr = 0)               // metoda dodaje elementy do combobox;
+        public void addItemsToComboBox(string inq, ComboBox comboBox, int atr = 0)                        // metoda dodaje elementy do combobox;
         {
             SqlCommand command = new SqlCommand(inq, connection);
             SqlDataReader dataReader = command.ExecuteReader();
@@ -43,7 +43,7 @@ namespace Baza
 
         }
 
-        public static string TrimPath(string path)                                    // metoda usuwająca wszystkie znaki po kropce łacznie z nią
+        public static string TrimPath(string path)                                                      // metoda usuwająca wszystkie znaki po kropce łacznie z nią
         {
             int index = path.IndexOf(".");
 

@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Connection\AddCommand.cs" />
     <Compile Include="Connection\DataFill.cs" />
     <Compile Include="Serialization.cs" />
     <Compile Include="Connection\SetConnection.cs" />

@@ -27,7 +27,8 @@ namespace Baza
         private List<Button> adminButtonsList;                        // lista przycisków dostępnych dla administratora 
         private SetConnection setConnection;
         private DataFill dataFill;
-       
+        private AddCommand addCommand;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -38,12 +39,13 @@ namespace Baza
 
             dataFill = new DataFill();
             setConnection = new SetConnection();
+            addCommand = new AddCommand();
 
         }
 
         public void StartConnection()
         {
-           
+
             connection = setConnection.GetConnection();                              // otwiera polączenie
 
             refreshAllTAbles();                                                      // odświeża wszystkie widoki
@@ -52,20 +54,20 @@ namespace Baza
 
             string inq1 = "select * from samochody";
             string inq2 = "select * from klienci";
-             //   string inq3 = "select * from pracownicy";
+            //   string inq3 = "select * from pracownicy";
 
             utility.addItemsToComboBox(inq1, samochodyComboBox, 1);                  // dodawanie pól z bazy do combobox
             utility.addItemsToComboBox(inq2, klienciComboBox);
-             //   utility.addItemsToComboBox(inq3, pracownicyComboBox);
+            //   utility.addItemsToComboBox(inq3, pracownicyComboBox);
         }
 
-        private void Start_Click(object sender, RoutedEventArgs e)                       // przycisk start w raportach
+        private void Start_Click(object sender, RoutedEventArgs e)                  // przycisk start w raportach
         {
-              inquiry = inquiryTextBox.Text;                                             // przypisuje zapytanie z textbox do amiennej inquiry
-              DataShow(inquiry, raportyGrid);                                            // funkcja wyświetla zapytanie na gridzie w raportach
+            inquiry = inquiryTextBox.Text;                                             // przypisuje zapytanie z textbox do amiennej inquiry
+            dataFill.DataShow(inquiry, raportyGrid, connection);                   // funkcja wyświetla zapytanie na gridzie w raportach
 
-         //  inquiry = "Select  klientID, count(klientID) as 'Wypożyczenia' from wypozyczenia group by KlientID";
-         //  DataShow(inquiry, raportyGrid);
+            //  inquiry = "Select  klientID, count(klientID) as 'Wypożyczenia' from wypozyczenia group by KlientID";
+            //  DataShow(inquiry, raportyGrid);
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)            // przycisk exit w menu Plik
@@ -86,7 +88,7 @@ namespace Baza
         }
 
         private void Panel_Click(object sender, RoutedEventArgs e)            // przycisk panel administratora w menu Opcje
-        {    
+        {
             Panel panel = new Panel(this, connection);                        // tworzy nowe okno klasy Panel i pobiera aktualne połączenie z bazą
             panel.ShowDialog();                                               // otwiera okno Panel   
         }
@@ -104,7 +106,8 @@ namespace Baza
                 pesel = peselTextBoxC.Text;
 
                 inquiry = "insert into klienci values('" + name + "', '" + surname + "', '" + pesel + "')";  // zapytanie dodające klienta do bazy
-                DataShow(inquiry, klienciGrid);                               // dodanie rekordu
+
+                dataFill.DataShow(inquiry, klienciGrid, connection);                               // dodanie rekordu
                 refreshAllTAbles();                                           // odświeża wszystkie widoki
             }
             else if (sender.Equals(addEmployee))                              // wyłąpuje z której zakładki (TabItem) został naciśnięty przycisk                
@@ -113,26 +116,28 @@ namespace Baza
                 surname = surnameTextBoxE.Text;
 
                 inquiry = "insert into pracownicy values('" + name + "', '" + surname + "')";
-                DataShow(inquiry, pracownicyGrid);                              // dodanie rekordu
+                dataFill.DataShow(inquiry, pracownicyGrid, connection);                              // dodanie rekordu
                 refreshAllTAbles();                                             // odświeża wszystkie widoki
             }
             else if (sender.Equals(addCar))
             {
-                string brand = brandTextBoxS.Text;
+                string marka = brandTextBoxS.Text;
                 string model = modelTextBoxS.Text;
-                string color = colorTextBoxS.Text;
-                string cena = cenaTextBoxS.Text;
-                string status = "false";
+                string kolor = colorTextBoxS.Text;
+                string cenaDoby = cenaTextBoxS.Text;
+                string zajety = "false";
 
-                inquiry = "insert into samochody values('" + brand + "', '" + model + "', '" + color + "', '" +status+ "', '" + cena + "')";
-                DataShow(inquiry, samochodyGrid);                              // dodanie rekordu
+                List<string> lista = new List<string>() {marka, model, kolor, cenaDoby, zajety };
+             
+                addCommand.AddCar(samochodyGrid, lista, connection);
+
                 string inq1 = "select * from samochody";
                 utility.addItemsToComboBox(inq1, samochodyComboBox, 1);         // odświeża combobox samochodyComboBox
                 refreshAllTAbles();                                            // odświeża wszystkie widoki
 
-              
+
             }
-            else if(sender.Equals(addOrder))
+            else if (sender.Equals(addOrder))
             {
                 string path;
                 string trimmedPath;
@@ -161,10 +166,10 @@ namespace Baza
                 {
                     inquiry = "insert into wypozyczenia values(" + samID + ", " + pracID + ", " + klientID + ", '" + datawyp + "', '" + datazwr + "', " + koszt + ")";
 
-                    DataShow(inquiry, wypozyczeniGrid);
+                    dataFill.DataShow(inquiry, wypozyczeniGrid, connection);
 
                     inquiry = "update samochody set zajety = 'true' where samID = " + samID + "";
-                    DataShow(inquiry, samochodyGrid);
+                    dataFill.DataShow(inquiry, samochodyGrid, connection);
 
                     string inq1 = "select * from samochody";
                     utility.addItemsToComboBox(inq1, samochodyComboBox, 1);         // odświeża combobox samochodyComboBox
@@ -176,7 +181,7 @@ namespace Baza
                 else
                 {
                     MessageBox.Show("Pola nie zostały wypełnione");
-                }       
+                }
             }
         }
 
@@ -195,28 +200,28 @@ namespace Baza
                 // update klienci set imie='Janina' where klientID=34
 
                 inquiry = "update klienci set imie='" + name + "' where klientID=" + id + "";
-                DataShow(inquiry, klienciGrid);
+                dataFill.DataShow(inquiry, klienciGrid, connection);
 
                 inquiry = "update klienci set nazwisko='" + surname + "' where klientID=" + id + "";
-                DataShow(inquiry, klienciGrid);
+                dataFill.DataShow(inquiry, klienciGrid, connection);
 
                 inquiry = "update klienci set pesel='" + pesel + "' where klientID=" + id + "";
-                DataShow(inquiry, klienciGrid);
+                dataFill.DataShow(inquiry, klienciGrid, connection);
                 refreshAllTAbles();                                           // odświeża wszystkie widoki
             }
-            else if(sender.Equals(editEmployee))
+            else if (sender.Equals(editEmployee))
             {
                 name = nameTextBoxE.Text;
                 surname = surnameTextBoxE.Text;
 
 
-                if(row != null)
+                if (row != null)
                 {
                     inquiry = "update pracownicy set imie='" + name + "' where pracID=" + id + "";
-                    DataShow(inquiry, pracownicyGrid);
+                    dataFill.DataShow(inquiry, pracownicyGrid, connection);
 
                     inquiry = "update pracownicy set nazwisko='" + surname + "' where pracID=" + id + "";
-                    DataShow(inquiry, pracownicyGrid);
+                    dataFill.DataShow(inquiry, pracownicyGrid, connection);
                 }
 
                 List<User> usersList = new List<User>();                    // tymczasowa lista użytkowników
@@ -226,13 +231,13 @@ namespace Baza
                 usersList[pracIndex].Name = name;
                 usersList[pracIndex].Surname = surname;
 
-                Serialization.SaveUserListToFile(usersList, @"user.xml");   // zapissanie zmienionej listy do pliku
+                Serialization.SaveUserListToFile(usersList, @"user.xml");   // zapisanie zmienionej listy do pliku
 
-                MessageBox.Show(pracIndex.ToString()); 
+                MessageBox.Show(pracIndex.ToString());
 
                 refreshAllTAbles();                                          // odświeża wszystkie widoki
             }
-            else if(sender.Equals(editCar))
+            else if (sender.Equals(editCar))
             {
                 string brand = brandTextBoxS.Text;
                 string model = modelTextBoxS.Text;
@@ -240,39 +245,39 @@ namespace Baza
                 string cena = cenaTextBoxS.Text;
 
                 inquiry = "update samochody set marka='" + brand + "' where samID=" + id + "";      // można zrobić w jednym zapytnaiu
-                DataShow(inquiry, samochodyGrid);
+                dataFill.DataShow(inquiry, samochodyGrid, connection);
 
                 inquiry = "update samochody set model='" + model + "' where samID=" + id + "";
-                DataShow(inquiry, samochodyGrid);
+                dataFill.DataShow(inquiry, samochodyGrid, connection);
 
                 inquiry = "update samochody set kolor='" + color + "' where samID=" + id + "";
-                DataShow(inquiry, samochodyGrid);
+                dataFill.DataShow(inquiry, samochodyGrid, connection);
 
-                inquiry = "update samochody set kolor='" + cena + "' where samID=" + id + "";
-                DataShow(inquiry, samochodyGrid);
+                inquiry = "update samochody set cena='" + cena + "' where samID=" + id + "";
+                dataFill.DataShow(inquiry, samochodyGrid, connection);
 
                 refreshAllTAbles();                                             // odświeża wszystkie widoki
             }
-            else if(sender.Equals(releaseOrder))
+            else if (sender.Equals(releaseOrder))
             {
                 inquiry = "update samochody set zajety = 'false' where samID = " + samID + "";
-                DataShow(inquiry, wypozyczeniGrid);
+                dataFill.DataShow(inquiry, wypozyczeniGrid, connection);
 
                 string inq1 = "select * from samochody";
                 utility.addItemsToComboBox(inq1, samochodyComboBox, 1);         // odświeża combobox samochodyComboBox
 
                 refreshAllTAbles();                                             // odświeża wszystkie widoki
             }
-            else if(sender.Equals(editOrder))
+            else if (sender.Equals(editOrder))
             {
                 string dataWyporzyczenia = dataWypozyczeniaDatePicker.Text;
                 string dataZwrotu = dataZwrotuDatePicker.Text;
                 string koszt = koszTextBox.Text;
-                inquiry = "update wypozyczenia set datawyp='"+ dataWyporzyczenia + "', datazwr='"+ dataZwrotu + "',koszt='"+koszt+"' where wypID='" +id +"'";
-                DataShow(inquiry, wypozyczeniGrid);
+                inquiry = "update wypozyczenia set datawyp='" + dataWyporzyczenia + "', datazwr='" + dataZwrotu + "',koszt='" + koszt + "' where wypID='" + id + "'";
+                dataFill.DataShow(inquiry, wypozyczeniGrid, connection);
                 refreshAllTAbles();
             }
-            
+
         }
 
         private void delete_Click(object sender, RoutedEventArgs e)            // wspolna metoda dla przycisków kasujących 
@@ -282,30 +287,30 @@ namespace Baza
             {
                 inquiry = "delete from klienci where klientID=" + id + "";
                 string inquiry2 = "delete from wypozyczenia where klientID=" + id + "";
-                DataShow(inquiry2, klienciGrid);                                 // skasowanie rekordów klienta w wypożyczeniach
-                DataShow(inquiry, klienciGrid);                                  // skasownie rekordu
-               
+                dataFill.DataShow(inquiry2, klienciGrid, connection);                                 // skasowanie rekordów klienta w wypożyczeniach
+                dataFill.DataShow(inquiry, klienciGrid, connection);                                  // skasownie rekordu
+
                 refreshAllTAbles();                                              // odświeża wszystkie widoki
             }
             else if (sender.Equals(deleteEmployee))
             {
                 inquiry = "delete from pracownicy where pracID=" + id + "";
-                DataShow(inquiry, pracownicyGrid);                                // skasownie rekordu
+                dataFill.DataShow(inquiry, pracownicyGrid, connection);           // skasownie rekordu
                 refreshAllTAbles();                                               // odświeża wszystkie widoki
             }
             else if (sender.Equals(deleteCar))
             {
                 inquiry = "delete from samochody where samID=" + id + "";
-                DataShow(inquiry, samochodyGrid);                                  // skasownie rekordu
-                refreshAllTAbles();                                                // odświeża wszystkie widoki
+                dataFill.DataShow(inquiry, samochodyGrid, connection);            // skasownie rekordu
+                refreshAllTAbles();                                               // odświeża wszystkie widoki
             }
-            else if(sender.Equals(deleteOrder))
+            else if (sender.Equals(deleteOrder))
             {
                 inquiry = "delete from wypozyczenia where wypID=" + id + "";
-                DataShow(inquiry, wypozyczeniGrid);                                 // skasownie rekordu
+                dataFill.DataShow(inquiry, wypozyczeniGrid, connection);         // skasownie rekordu
 
                 inquiry = "update samochody set zajety = 'false' where samID = " + samID + "";
-                DataShow(inquiry, wypozyczeniGrid);
+                dataFill.DataShow(inquiry, wypozyczeniGrid, connection);
 
                 string inq1 = "select * from samochody";
                 utility.addItemsToComboBox(inq1, samochodyComboBox, 1);         // odświeża combobox samochodyComboBox
@@ -344,7 +349,7 @@ namespace Baza
                     nameTextBoxC.Text = row.Row.ItemArray[1].ToString();
                     surnameTextBoxC.Text = row.Row.ItemArray[2].ToString();
                     peselTextBoxC.Text = row.Row.ItemArray[3].ToString();
-                }            
+                }
             }
             else if (sender.Equals(pracownicyGrid))
             {
@@ -356,7 +361,7 @@ namespace Baza
                     pracIndex = pracownicyGrid.SelectedIndex;
                     nameTextBoxE.Text = row.Row.ItemArray[1].ToString();
                     surnameTextBoxE.Text = row.Row.ItemArray[2].ToString();
-                }   
+                }
             }
             else if (sender.Equals(samochodyGrid))
             {
@@ -370,69 +375,69 @@ namespace Baza
                     modelTextBoxS.Text = row.Row.ItemArray[2].ToString();
                     colorTextBoxS.Text = row.Row.ItemArray[3].ToString();
                     cenaTextBoxS.Text = row.Row.ItemArray[5].ToString();
-                }   
+                }
             }
             else if (sender.Equals(wypozyczeniGrid))
             {
                 row = wypozyczeniGrid.SelectedItem as DataRowView;
 
-                if(row != null)
+                if (row != null)
                 {
                     id = row.Row.ItemArray[0].ToString();
                     samID = row.Row.ItemArray[3].ToString();
                     dataWypozyczeniaDatePicker.Text = row.Row.ItemArray[11].ToString();
                     dataZwrotuDatePicker.Text = row.Row.ItemArray[12].ToString();
                     koszTextBox.Text = row.Row.ItemArray[13].ToString();
-                }        
+                }
             }
             else if (sender.Equals(historiaGrid))
             {
-               
+
             }
         }
 
         private void topClient_Click(object sender, RoutedEventArgs e)
         {
             inquiry = "Select imie, nazwisko, count(wypozyczenia.klientID) as 'Wypożyczenia' from wypozyczenia, klienci where wypozyczenia.klientID = klienci.klientID group by imie, nazwisko;";
-            DataShow(inquiry, raportyGrid);
+            dataFill.DataShow(inquiry, raportyGrid,connection);
         }
 
         private void topCars_Click(object sender, RoutedEventArgs e)
         {
             inquiry = "Select marka, model, count(samochody.samID) as 'Wypożyczenia', sum(wypozyczenia.koszt) as koszt from wypozyczenia, samochody where wypozyczenia.samID = samochody.samID group by marka, model order by koszt DESC; ";
-            DataShow(inquiry, raportyGrid);
+            dataFill.DataShow(inquiry, raportyGrid, connection);
         }
 
         private void topEmployees_Click(object sender, RoutedEventArgs e)
         {
             inquiry = "Select imie, nazwisko, count(pracownicy.pracID) as 'Wypożyczenia' from wypozyczenia, pracownicy where wypozyczenia.pracID = pracownicy.pracID group by imie, nazwisko;";
-            DataShow(inquiry, raportyGrid);
+            dataFill.DataShow(inquiry, raportyGrid, connection);
         }
 
         // funkcje pomocnicze
 
-        private void DataShow(string inquiry, DataGrid dataGrid)     // funkcja do wyświetlania zapytan 
-        {                                                            // przyjmuje 2 parametry (zapytanie, siatka do wyświetlania danych)
-            try
-            {
-                SqlCommand command = new SqlCommand();               // tworzy nowy rozkaz SQL
+        //private void DataShow(string inquiry, DataGrid dataGrid)     // funkcja do wyświetlania zapytan 
+        //{                                                            // przyjmuje 2 parametry (zapytanie, siatka do wyświetlania danych)
+        //    try
+        //    {
+        //        SqlCommand command = new SqlCommand();               // tworzy nowy rozkaz SQL
 
-                command.CommandText = inquiry;                       // wczytuje zapytanie SQL
-                command.Connection = connection;                     // ścieżka do bazy 
+        //        command.CommandText = inquiry;                       // wczytuje zapytanie SQL
+        //        command.Connection = connection;                     // ścieżka do bazy 
 
-                // command.ExecuteScalar();
+        //        // command.ExecuteScalar();
 
-                SqlDataAdapter da = new SqlDataAdapter(command);     // pobiera zapytanie do adaptera
-                DataTable dt = new DataTable("Car Rent");            // tworzy nową tabelę
-                da.Fill(dt);                                         // pobiera tabelę do adaptera
+        //        SqlDataAdapter da = new SqlDataAdapter(command);     // pobiera zapytanie do adaptera
+        //        DataTable dt = new DataTable("Car Rent");            // tworzy nową tabelę
+        //        da.Fill(dt);                                         // pobiera tabelę do adaptera
 
-                dataGrid.ItemsSource = dt.DefaultView;               // wyświetla dane na gridzie z tabeli dt
-            }
-            catch (Exception ex)                                     // wyłapuje wyjątki 
-            {
-                MessageBox.Show("Komunikat diagnostyczny do odczytywania błędów", ex.Message);    // wyświetla messagebox na ekran
-            }
-        }
+        //        dataGrid.ItemsSource = dt.DefaultView;               // wyświetla dane na gridzie z tabeli dt
+        //    }
+        //    catch (Exception ex)                                     // wyłapuje wyjątki 
+        //    {
+        //        MessageBox.Show("Komunikat diagnostyczny do odczytywania błędów", ex.Message);    // wyświetla messagebox na ekran
+        //    }
+        //}
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)    // funkcja zapobiegająca wprowadzaniu liter 
         {
@@ -444,28 +449,29 @@ namespace Baza
         {
             inquiry = "Select * from klienci";                                // odświeżenie widoku klienci po dodaniu rekordu
             dataFill.DataShow(inquiry, klienciGrid, connection);
-           // DataShow(inquiry, klienciGrid);
+            // DataShow(inquiry, klienciGrid);
 
             inquiry = "Select * from pracownicy";                             // odświeżenie widoku pracownicy po dodaniu rekordu
-            DataShow(inquiry, pracownicyGrid);
+            dataFill.DataShow(inquiry, pracownicyGrid, connection);
 
             inquiry = "Select * from samochody";                              // odświeżenie widoku samochody po dodaniu rekordu
-            DataShow(inquiry, samochodyGrid);
+            dataFill.DataShow(inquiry, samochodyGrid, connection);
 
-            inquiry = "select wypozyczenia.wypID, klienci.imie, klienci.nazwisko, samochody.samID, samochody.marka, samochody.model, samochody.zajety, samochody.cenaDoby, pracownicy.pracID, pracownicy.imie as imiePrac, pracownicy.nazwisko as nazwiskoPrac, wypozyczenia.datawyp, wypozyczenia.datazwr, wypozyczenia.koszt as RabatKoszt, (datediff(day,datawyp, datazwr) * samochody.cenaDoby) as Koszt, datediff(day,datawyp, datazwr) as IloscDni, datediff(day,GETDATE(), datazwr) as DniDoZwrotu " +
-          "from klienci, samochody, wypozyczenia, pracownicy " +
-          "where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID and wypozyczenia.pracID = pracownicy.pracID";
+            inquiry = "select wypozyczenia.wypID, klienci.imie, klienci.nazwisko, samochody.samID, samochody.marka, samochody.model, samochody.zajety, samochody.cenaDoby," +
+                " pracownicy.pracID, pracownicy.imie as imiePrac, pracownicy.nazwisko as nazwiskoPrac, wypozyczenia.datawyp, wypozyczenia.datazwr, wypozyczenia.koszt as RabatKoszt, " +
+                "(datediff(day,datawyp, datazwr) * samochody.cenaDoby) as Koszt, datediff(day,datawyp, datazwr) as IloscDni, datediff(day,GETDATE(), datazwr) as DniDoZwrotu " +
+                "from klienci, samochody, wypozyczenia, pracownicy where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID and " +
+                "wypozyczenia.pracID = pracownicy.pracID";
 
             //inquiry = "select wypozyczenia.wypID, klienci.imie, klienci.nazwisko, samochody.samID, samochody.marka, samochody.model, samochody.zajety, samochody.cenaDoby, pracownicy.pracID, pracownicy.imie as imiePrac, pracownicy.nazwisko as nazwiskoPrac, wypozyczenia.datawyp, wypozyczenia.datazwr, wypozyczenia.koszt, datediff(day,datawyp, datazwr) as IloscDni, datediff(day,GETDATE(), datazwr) as DniDoZwrotu " +
             //    "from klienci, samochody, wypozyczenia, pracownicy " +
             //    "where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID and wypozyczenia.pracID = pracownicy.pracID";
             // inquiry = "select wypozyczenia.wypID, klienci.klientID, pracownicy.pracID, samochody.marka, samochody.model,  wypozyczenia.datawyp, wypozyczenia.datazwr, wypozyczenia.koszt from klienci, samochody, wypozyczenia, pracownicy where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID and wypozyczenia.pracID = pracownicy.pracID ";
-            DataShow(inquiry, wypozyczeniGrid);                                // odświeżenie widoku wypożyczenia
+            dataFill.DataShow(inquiry, wypozyczeniGrid, connection);                                // odświeżenie widoku wypożyczenia
 
             inquiry = "select wypozyczenia.wypID, klienci.imie, klienci.nazwisko, samochody.marka, samochody.model, wypozyczenia.datawyp, wypozyczenia.datazwr " +
-                "from klienci, samochody, wypozyczenia " +
-                "where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
-            DataShow(inquiry, historiaGrid);
+                "from klienci, samochody, wypozyczenia where wypozyczenia.klientID = klienci.klientID and wypozyczenia.samID = samochody.samID";
+            dataFill.DataShow(inquiry, historiaGrid, connection);
 
         }
 
@@ -495,7 +501,7 @@ namespace Baza
             adminButtonsList.Add(deleteClient);
             adminButtonsList.Add(addEmployee);
             adminButtonsList.Add(editEmployee);
-          //  adminButtonsList.Add(deleteEmployee);
+            //  adminButtonsList.Add(deleteEmployee);
             adminButtonsList.Add(addCar);
             adminButtonsList.Add(editCar);
             adminButtonsList.Add(deleteCar);
@@ -544,7 +550,7 @@ namespace Baza
             {
                 bt.IsEnabled = true;
             }
-            adminPanel.IsEnabled = true; 
+            adminPanel.IsEnabled = true;
         }
         public void loginEnable()                                            // funkcja ustawiająca przycisk login w menu Plik na enable
         {
@@ -562,9 +568,9 @@ namespace Baza
         {
             PrintDialog printDialog = new PrintDialog();
 
-            if(printDialog.ShowDialog() == true)
+            if (printDialog.ShowDialog() == true)
             {
-                if(sender.Equals(printRaport))
+                if (sender.Equals(printRaport))
                 {
                     printDialog.PrintVisual(raportyGrid, "Drukownie Raportów");
                 }

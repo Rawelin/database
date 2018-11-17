@@ -19,13 +19,13 @@ namespace Baza
         {
             try
             {
-                connection = new SqlConnection();                                                            // tworzy nowe polączenie SQL
-                connection.ConnectionString = ConfigurationManager.ConnectionStrings["wypozyczalnia"].ConnectionString;    // ścieżka do bazy zmajdująca się w App.config
+                connection = new SqlConnection();                                                                           // tworzy nowe polączenie SQL
+                connection.ConnectionString = ConfigurationManager.ConnectionStrings["wypozyczalnia"].ConnectionString;     // ścieżka do bazy zmajdująca się w App.config
                 connection.Open();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Connection Failure", ex.Message);                       // wyświetla messagebox na ekranie
+                MessageBox.Show("Connection Failure", ex.Message);                                                          // wyświetla messagebox na ekranie
             }
             return connection;
         }

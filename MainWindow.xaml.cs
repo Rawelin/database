@@ -28,6 +28,7 @@ namespace Baza
         private SetConnection setConnection;
         private DataFill dataFill;
         private AddCommand addCommand;
+        private EditCommand editCommand;
 
         public MainWindow()
         {
@@ -40,6 +41,7 @@ namespace Baza
             dataFill = new DataFill();
             setConnection = new SetConnection();
             addCommand = new AddCommand();
+            editCommand = new EditCommand();
 
         }
 
@@ -105,9 +107,10 @@ namespace Baza
                 surname = surnameTextBoxC.Text;
                 pesel = peselTextBoxC.Text;
 
-                inquiry = "insert into klienci values('" + name + "', '" + surname + "', '" + pesel + "')";  // zapytanie dodające klienta do bazy
+                List<string> lista = new List<string>() { name, surname, pesel};
 
-                dataFill.DataShow(inquiry, klienciGrid, connection);                               // dodanie rekordu
+                addCommand.AddKlient(klienciGrid, lista, connection);
+
                 refreshAllTAbles();                                           // odświeża wszystkie widoki
             }
             else if (sender.Equals(addEmployee))                              // wyłąpuje z której zakładki (TabItem) został naciśnięty przycisk                
@@ -115,8 +118,10 @@ namespace Baza
                 name = nameTextBoxE.Text;
                 surname = surnameTextBoxE.Text;
 
-                inquiry = "insert into pracownicy values('" + name + "', '" + surname + "')";
-                dataFill.DataShow(inquiry, pracownicyGrid, connection);                              // dodanie rekordu
+                List<string> lista = new List<string>() { name, surname};
+
+                addCommand.AddEmployee(pracownicyGrid, lista, connection);
+
                 refreshAllTAbles();                                             // odświeża wszystkie widoki
             }
             else if (sender.Equals(addCar))
@@ -133,9 +138,7 @@ namespace Baza
 
                 string inq1 = "select * from samochody";
                 utility.addItemsToComboBox(inq1, samochodyComboBox, 1);         // odświeża combobox samochodyComboBox
-                refreshAllTAbles();                                            // odświeża wszystkie widoki
-
-
+                refreshAllTAbles();                                             // odświeża wszystkie widoki
             }
             else if (sender.Equals(addOrder))
             {
@@ -197,16 +200,10 @@ namespace Baza
                 surname = surnameTextBoxC.Text;
                 pesel = peselTextBoxC.Text;
 
-                // update klienci set imie='Janina' where klientID=34
+                List<string> lista = new List<string>() { name, surname, pesel, id};
 
-                inquiry = "update klienci set imie='" + name + "' where klientID=" + id + "";
-                dataFill.DataShow(inquiry, klienciGrid, connection);
+                editCommand.EditClient(klienciGrid, lista, connection);
 
-                inquiry = "update klienci set nazwisko='" + surname + "' where klientID=" + id + "";
-                dataFill.DataShow(inquiry, klienciGrid, connection);
-
-                inquiry = "update klienci set pesel='" + pesel + "' where klientID=" + id + "";
-                dataFill.DataShow(inquiry, klienciGrid, connection);
                 refreshAllTAbles();                                           // odświeża wszystkie widoki
             }
             else if (sender.Equals(editEmployee))
@@ -217,11 +214,14 @@ namespace Baza
 
                 if (row != null)
                 {
-                    inquiry = "update pracownicy set imie='" + name + "' where pracID=" + id + "";
-                    dataFill.DataShow(inquiry, pracownicyGrid, connection);
+                    //inquiry = "update pracownicy set imie='" + name + "' where pracID=" + id + "";
+                    //dataFill.DataShow(inquiry, pracownicyGrid, connection);
 
-                    inquiry = "update pracownicy set nazwisko='" + surname + "' where pracID=" + id + "";
-                    dataFill.DataShow(inquiry, pracownicyGrid, connection);
+                    //inquiry = "update pracownicy set nazwisko='" + surname + "' where pracID=" + id + "";
+                    //dataFill.DataShow(inquiry, pracownicyGrid, connection);
+                    List<string> lista = new List<string>() { name, surname, id };
+
+                    editCommand.EditEmployee(pracownicyGrid, lista, connection);
                 }
 
                 List<User> usersList = new List<User>();                    // tymczasowa lista użytkowników
@@ -239,22 +239,26 @@ namespace Baza
             }
             else if (sender.Equals(editCar))
             {
-                string brand = brandTextBoxS.Text;
+                string marka = brandTextBoxS.Text;
                 string model = modelTextBoxS.Text;
-                string color = colorTextBoxS.Text;
+                string kolor = colorTextBoxS.Text;
                 string cena = cenaTextBoxS.Text;
 
-                inquiry = "update samochody set marka='" + brand + "' where samID=" + id + "";      // można zrobić w jednym zapytnaiu
-                dataFill.DataShow(inquiry, samochodyGrid, connection);
+                //inquiry = "update samochody set marka='" + brand + "' where samID=" + id + "";      // można zrobić w jednym zapytaniu
+                //dataFill.DataShow(inquiry, samochodyGrid, connection);
 
-                inquiry = "update samochody set model='" + model + "' where samID=" + id + "";
-                dataFill.DataShow(inquiry, samochodyGrid, connection);
+                //inquiry = "update samochody set model='" + model + "' where samID=" + id + "";
+                //dataFill.DataShow(inquiry, samochodyGrid, connection);
 
-                inquiry = "update samochody set kolor='" + color + "' where samID=" + id + "";
-                dataFill.DataShow(inquiry, samochodyGrid, connection);
+                //inquiry = "update samochody set kolor='" + color + "' where samID=" + id + "";
+                //dataFill.DataShow(inquiry, samochodyGrid, connection);
 
-                inquiry = "update samochody set cena='" + cena + "' where samID=" + id + "";
-                dataFill.DataShow(inquiry, samochodyGrid, connection);
+                //inquiry = "update samochody set cena='" + cena + "' where samID=" + id + "";
+                //dataFill.DataShow(inquiry, samochodyGrid, connection);
+
+                List<string> lista = new List<string>() { marka, model, kolor, cena, samID };
+
+                editCommand.EditCar(samochodyGrid, lista, connection);
 
                 refreshAllTAbles();                                             // odświeża wszystkie widoki
             }

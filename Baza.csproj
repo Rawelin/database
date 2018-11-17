@@ -57,6 +57,7 @@
     </ApplicationDefinition>
     <Compile Include="Connection\AddCommand.cs" />
     <Compile Include="Connection\DataFill.cs" />
+    <Compile Include="Connection\EditCommand.cs" />
     <Compile Include="Serialization.cs" />
     <Compile Include="Connection\SetConnection.cs" />
     <Compile Include="User.cs" />

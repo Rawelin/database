@@ -8,16 +8,16 @@ using System.Windows.Controls;
 
 namespace Baza.Connection
 {
-    public class AddCommand
+    public class InsertCommand
     {
         private DataFill dataFill;
 
-        public AddCommand()
+        public InsertCommand()
         {
             dataFill = new DataFill();    
         }
 
-        public void AddCar(DataGrid Grid, List<string> lista, SqlConnection connection)
+        public void InsertCar(DataGrid Grid, List<string> lista, SqlConnection connection)
         {
             SqlCommand command = new SqlCommand("insert into samochody(marka, model, kolor, zajety, cenaDoby) values(@marka, @model, @kolor, @zajety, @cenaDoby);", connection);
             command.Parameters.AddWithValue("@marka", lista[0]);
@@ -29,7 +29,7 @@ namespace Baza.Connection
             dataFill.DataShow2(Grid, command);                     
         }
 
-        public void AddEmployee(DataGrid Grid, List<string> lista, SqlConnection connection)
+        public void InsertEmployee(DataGrid Grid, List<string> lista, SqlConnection connection)
         {
             SqlCommand command = new SqlCommand("insert into pracownicy(imie, nazwisko) values(@imie, @nazwisko);", connection);
             command.Parameters.AddWithValue("@imie", lista[0]);
@@ -38,7 +38,7 @@ namespace Baza.Connection
             dataFill.DataShow2(Grid, command);
         }
 
-        public void AddKlient(DataGrid Grid, List<string> lista, SqlConnection connection)
+        public void InsertKlient(DataGrid Grid, List<string> lista, SqlConnection connection)
         {
           
             SqlCommand command = new SqlCommand("insert into klienci(imie, nazwisko, pesel) values(@imie, @nazwisko, @pesel);", connection);

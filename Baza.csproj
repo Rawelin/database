@@ -55,9 +55,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Connection\AddCommand.cs" />
+    <Compile Include="Connection\InsertCommand.cs" />
     <Compile Include="Connection\DataFill.cs" />
-    <Compile Include="Connection\EditCommand.cs" />
+    <Compile Include="Connection\DeleteCommand.cs" />
+    <Compile Include="Connection\SelectCommand.cs" />
+    <Compile Include="Connection\UpdateComboBox.cs" />
+    <Compile Include="Connection\UpdateCommand.cs" />
     <Compile Include="Serialization.cs" />
     <Compile Include="Connection\SetConnection.cs" />
     <Compile Include="User.cs" />

@@ -50,6 +50,17 @@ namespace Baza.Connection
             dataFill.DataShow2(Grid, command);
         }
 
+        public void UpdateWypozyczenia(DataGrid Grid, List<string> lista, SqlConnection connection)
+        {       
+            SqlCommand command = new SqlCommand("update wypozyczenia set datawyp=@datawyp, datazwr=@datazwr, koszt=@koszt where wypID=@wypID", connection);
+            command.Parameters.AddWithValue("@datawyp", lista[0]);
+            command.Parameters.AddWithValue("@datazwr", lista[1]);
+            command.Parameters.AddWithValue("@koszt", lista[2]);
+            command.Parameters.AddWithValue("@wypID", lista[3]);
+       
+            dataFill.DataShow2(Grid, command);
+        }
+
         public void UpdateCarBooked(DataGrid Grid, bool zajety, string samID, SqlConnection connection)
         {
             SqlCommand command = new SqlCommand("update samochody set zajety=@zajety where samID=@samID", connection);

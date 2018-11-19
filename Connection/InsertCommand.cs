@@ -39,12 +39,24 @@ namespace Baza.Connection
         }
 
         public void InsertKlient(DataGrid Grid, List<string> lista, SqlConnection connection)
-        {
-          
+        {     
             SqlCommand command = new SqlCommand("insert into klienci(imie, nazwisko, pesel) values(@imie, @nazwisko, @pesel);", connection);
             command.Parameters.AddWithValue("@imie", lista[0]);
             command.Parameters.AddWithValue("@nazwisko", lista[1]);
             command.Parameters.AddWithValue("@pesel", lista[2]);
+
+            dataFill.DataShow2(Grid, command);
+        }
+
+        public void InsertWypozyczenia(DataGrid Grid, List<string> lista, SqlConnection connection)
+        {       
+            SqlCommand command = new SqlCommand("insert into wypozyczenia(samID, pracID, klientID, datawyp, datazwr, koszt) values(@samID, @pracID, @klientID, @datawyp, @datazwr, @koszt);", connection);
+            command.Parameters.AddWithValue("@samID", lista[0]);
+            command.Parameters.AddWithValue("@pracID", lista[1]);
+            command.Parameters.AddWithValue("@klientID", lista[2]);
+            command.Parameters.AddWithValue("@datawyp", lista[3]);
+            command.Parameters.AddWithValue("@datazwr", lista[4]);
+            command.Parameters.AddWithValue("@koszt", lista[5]);
 
             dataFill.DataShow2(Grid, command);
         }

@@ -52,5 +52,22 @@ namespace Baza
 
             return path;
         }
+
+        public static void Print(object sender, RoutedEventArgs e, DataGrid raportyGrid, DataGrid wypozyczeniGrid, Button printRaport, Button printOrder)
+        {
+            PrintDialog printDialog = new PrintDialog();
+
+            if (printDialog.ShowDialog() == true)
+            {
+                if (sender.Equals(printRaport))
+                {
+                    printDialog.PrintVisual(raportyGrid, "Drukownie Raportów");
+                }
+                else if (sender.Equals(printOrder))
+                {
+                    printDialog.PrintVisual(wypozyczeniGrid, "Drukownie Zamówień");
+                }
+            }
+        }
     }
 }

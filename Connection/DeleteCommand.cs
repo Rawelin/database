@@ -25,10 +25,10 @@ namespace Baza.Connection
             dataFill.DataShow2(Grid, command);
         }
 
-        public void DeleteWypozyczenia(DataGrid Grid, string klientID, SqlConnection connection)
+        public void DeleteWypozyczenia(DataGrid Grid, string wypID, SqlConnection connection)
         {
-            SqlCommand command = new SqlCommand("delete from wypozyczenia where klientID=@klientID", connection);
-            command.Parameters.AddWithValue("@klientID", klientID);
+            SqlCommand command = new SqlCommand("delete from wypozyczenia where wypID=@wypID", connection);
+            command.Parameters.AddWithValue("@wypID", wypID);
 
             dataFill.DataShow2(Grid, command);
         }
